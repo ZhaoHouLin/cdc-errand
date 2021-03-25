@@ -2,7 +2,7 @@
 import { googleFireStore , googleFirebase } from '../db'
 import { onMounted, reactive, ref } from 'vue'
 // import { apiSignUpPage, apiSignInPage } from '../api'
-import { useRouter } from 'vue-router'
+
 export default {
   props: {
     bool: {
@@ -20,7 +20,7 @@ export default {
   },
 
   setup(props,{emit}) {
-    const router = useRouter()
+
     const open = ref(true)
     let cover = ref()
     let userEmail = ref('')
