@@ -1,16 +1,14 @@
 <script>
 import { googleFireStore , googleFirebase } from '../db'
 import { onMounted, reactive, ref } from 'vue'
-// import { apiSignUpPage, apiSignInPage } from '../api'
-
 export default {
-  props: {
+  props: {                                              //接收App.vue用
     bool: {
       type: Boolean,
       default: true
     }
   },
-  emits: {
+  emits: {                                              //向App.vue傳遞用
     emitAuthState: (authState)=> {
       return authState
     },
@@ -32,23 +30,9 @@ export default {
 
     const loginUserInfo = reactive({})
 
-    const userSignUp = reactive({
-      email: '',
-      password: ''
-    })
-
-    const userSignIn = reactive({
-      email: '',
-      password: ''
-    })
-
     const userData = ref()
 
-    const gotoNewRouter = () => {    //自建函式來切換指定頁面
-      router.push({path: `/editsheet`})
-    }
-
-    const handleAuthState = ()=> {
+    const handleAuthState = ()=> {                        //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
         if (userData.value) {
           authState.value = true
@@ -60,61 +44,21 @@ export default {
       })
     }
 
-    const handleSignUp = (e)=> {
-      e.preventDefault()
-      userSignUp.email = userEmail.value
-      userSignUp.password = userPassword.value
-
-      googleFirebase.auth().createUserWithEmailAndPassword(userSignUp.email, userSignUp.password)
-        .then(u => {
-          googleFireStore.collection('profiles').doc(u.user.uid).set({
-            name: userSignUp.email,
-            password: userSignUp.password
-          }).then(()=> {
-            console.log('User created successfully');
-            userEmail.value = ''
-            userPassword.value = ''
-          }).catch(err => {
-            console.log(err);
-          })
-        }).catch(err => {
-          console.log(err);
-          errorMsg.value = err.message
-        })
-    }
-
-    const handleSignIn = (e)=> {
-      handleSignOut()
-      e.preventDefault()
-      userSignIn.email = userEmail.value
-      userSignIn.password = userPassword.value
-      googleFirebase.auth().signInWithEmailAndPassword(userSignIn.email,userSignIn.password)
-        .then(()=> {
-          userData.value = googleFirebase.auth().currentUser
-          // if(userData.value) console.log(userSignIn);
-          handleAuthState()
-          userEmail.value = ''
-          userPassword.value = ''
-        }).catch(err => {
-          console.log(err.message);
-          errorMsg.value = err.message
-        })
-    }
-
-    const googleSignIn = ()=> {
+    const googleSignIn = ()=> {                           //以google登入
       handleSignOut()
       let provider = new googleFirebase.auth.GoogleAuthProvider()
       googleFirebase.auth().languageCode = 'it';
       // To apply the default browser preference instead of explicitly setting it.
-      // firebase.auth().useDeviceLanguage();
+      googleFirebase.auth().useDeviceLanguage()
       googleFirebase
         .auth()
         .signInWithPopup(provider)
         .then((result) => {
           /** @type {firebase.auth.OAuthCredential} */
           userData.value = googleFirebase.auth().currentUser
+          console.log(result.additionalUserInfo.profile.picture);
           loginUserInfo.data = result.additionalUserInfo.profile
-          emit('emitData',loginUserInfo.data)
+          emit('emitData',loginUserInfo.data)               //發送使用者登入資料到App.vue
           handleAuthState()
         })
         .catch((error) => {
@@ -124,7 +68,7 @@ export default {
         });
     }
 
-    const handleSignOut = ()=> {
+    const handleSignOut = ()=> {                            //登出
       googleFirebase.auth().signOut().then(() => {
         console.log('Sign-out successful.');
         userData.value = googleFirebase.auth().currentUser
@@ -134,19 +78,6 @@ export default {
       });
     }
 
-    const handleOpen = (e)=> {
-      userEmail.value = ''
-      userPassword.value = ''
-      if(open.value) {
-        // console.log('cover',cover);
-        apiSignUpPage(cover.value)
-        open.value = !open.value
-      } else {
-        apiSignInPage(cover.value)
-        open.value = !open.value
-      }
-    }
-
     onMounted(()=> {
       
     })
@@ -154,14 +85,10 @@ export default {
     return {
       userEmail,
       userPassword,
-      handleSignUp,
-      handleSignIn,
       googleSignIn,
       handleSignOut,
       authState,
-      handleOpen,
       cover,
-      gotoNewRouter,
       errorMsg,
       props
     }

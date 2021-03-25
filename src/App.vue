@@ -10,13 +10,13 @@ export default {
   },
   setup() {
     const authState = ref(false)
-    const data = ref('')
+    const data = ref({})
 
-    const handleEmitAuthState = (val)=> {
+    const handleEmitAuthState = (val)=> {         //將接收的登入狀態值val存入authState
       authState.value = val.value
     }
 
-    const handleData = (val)=> {
+    const handleData = (val)=> {                  //將接收的使用者登入資料存入data
       data.value = val
     }
     return {
@@ -30,10 +30,6 @@ export default {
 </script>
 
 <template lang='pug'>
-//- router-link(to="/editsheet") EditSheet
-
-//- router-link(to="/login") Login
-
 EditSheet(:bool='authState' :data='data' @emitAuthState='handleEmitAuthState')
 Login(@emitAuthState='handleEmitAuthState' @emitData='handleData' :bool='authState')
 </template>
