@@ -157,13 +157,15 @@ export default {
 </script>
 
 <template lang='pug'>
-.edit-sheet(v-if='props.bool')
-  h1 {{props.data.name}}
-  h2 {{time.localDate}}
-  h2 {{time.loaclTime}}
+.edit-sheet.container(v-if='props.bool')
+  .info.container.text-center
+    h1 {{props.data.name}}
+    h2 {{time.localDate}}
+    h2 {{time.loaclTime}}
   //- input(@input='changeTitle' v-model='userKeyTitle')
-  button(@click='f(),getTime()') 打卡
-  button(@click='handleSignOut') 登出
+  .insert.container.bg-green-200.flex.justify-around
+    button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='f(),getTime()')() 打卡
+    button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='handleSignOut') 登出
 </template>
 
 <style lang="stylus">

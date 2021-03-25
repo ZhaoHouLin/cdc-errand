@@ -170,11 +170,9 @@ export default {
 </script>
 
 <template lang='pug'>
-.card.p-6.max-w-sm.mx-auto.rounded-xl.shadow-md.flex.items-center.space-x-4(v-if='!props.bool')
-  a(@click='googleSignIn') 疾管署 google帳號登入
-        
-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700')
-  | Click me
+      
+a.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='googleSignIn' v-if='!props.bool')
+  | 疾管署 google帳號登入
 
 
 
@@ -182,12 +180,16 @@ button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(clas
 
 <style lang='stylus'>
 @css {
-  .card {
-    @apply rounded-lg bg-green-50 p-4
+  .btn {
+    @apply py-2 px-4 font-semibold rounded-lg shadow-md
   }
-
+  .btn-green {
+    @apply text-white bg-green-500 hover:bg-green-700
+  }
+  
 }
 
-  
+.login-button
+  cursor pointer  
 
 </style>
