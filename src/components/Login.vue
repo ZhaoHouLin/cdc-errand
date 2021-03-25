@@ -1,7 +1,7 @@
 <script>
 import { googleFireStore , googleFirebase } from '../db'
 import { onMounted, reactive, ref } from 'vue'
-import { apiSignUpPage, apiSignInPage } from '../api'
+// import { apiSignUpPage, apiSignInPage } from '../api'
 import { useRouter } from 'vue-router'
 export default {
   props: {
