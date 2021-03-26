@@ -28,7 +28,9 @@ export default {
     const a1 = ref()                                        //存放google-spreadsheet左上角起始定位
     const rows = ref()
 
-    const time = reactive({})
+    const time = reactive({
+
+    })
 
     const authState = ref(false)
 
@@ -144,17 +146,82 @@ export default {
 </script>
 
 <template lang='pug'>
-.edit-sheet.container(v-if='props.bool')
-  .info.container.text-center
+.content(v-if='props.bool')
+  img(:src="props.data.picture", alt="是你啦")
+  .info
     h1 {{props.data.name}}
     h2 {{time.localDate}}
     h2 {{time.loaclTime}}
+  .control.text-xl.font-extrabold
+    .state
+      .on.my-1
+        label
+          input(type='radio' value=1 name='workstate' checked)
+          .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 上班
+      .off.mt-2.mb-1
+        label 
+          input(type='radio' value=0 name='workstate')
+          .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 下班
 
-  .insert.container.bg-green-200.flex.justify-around
-    button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='f(),getTime()')() 打卡
-    button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='handleSignOut') 登出
+    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='f(),getTime()') 打卡
+    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='handleSignOut') 登出
+
+
+
+//- .edit-sheet.container(v-if='props.bool')
+//-   .info.container.flex.flex-col.text-center
+//-     img.rounded-full.self-center(class='w-4/12' :src="props.data.picture", alt="alt")
+//-     .datatext(class='h-40')
+//-       h1 {{props.data.name}}
+//-       h2 {{time.localDate}}
+//-       h2 {{time.loaclTime}}
+
+//-   .insert.container.flex.justify-around
+//-     button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='f(),getTime()')() 打卡
+//-     .work-state.flex
+//-       .on
+//-         input(type='radio' value=1 name='workstate')
+//-         label(for=1) 上班
+//-       .off
+//-         input(type='radio' value=0 name='workstate')
+//-         label(for=2) 下班
+//-     button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='handleSignOut') 登出
 </template>
 
 <style lang="stylus">
-
+@import '../css/style.styl'
+.content
+  size(60%,30vh)
+  position relative
+  border 1px solid #222
+  img
+    width 60%
+    border-radius 16px
+    position absolute
+    top -10%
+    left -10%
+  .info
+    padding 1rem
+    // border 1px solid #222
+    // flexCenter(flex-start,center,column)
+    size(70%,40%)
+    position absolute
+    top 55%
+  .control
+    flexCenter(flex-start,,column)
+    position absolute
+    right -20%
+    top 10%
+    // > *
+    //   border 1px solid #222
+    .state
+      .on,.off
+        input
+          // opacity 0
+          display none
+        input:checked + .text
+          background-color rgba(59, 130, 246, 1)
+          color white
+        label .text
+          flexCenter()
 </style>
