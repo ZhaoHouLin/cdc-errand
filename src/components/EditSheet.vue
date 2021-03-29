@@ -36,6 +36,8 @@ export default {
 
     const userData = ref()
 
+    const workState = ref('上班')
+
     const getLocation = () => {                         
       if ('geolocation' in navigator) {                     //測試地理位置定位是否存在
         navigator.geolocation.getCurrentPosition((pos) => { //取得使用者目前經緯度
@@ -59,6 +61,10 @@ export default {
       time.localDate = new Date().toLocaleDateString()
       time.loaclTime = new Date().toLocaleTimeString()
       console.log(time)
+    }
+
+    const handleWorkstate = (e)=> {
+      workState.value = e.target.value
     }
 
     const handleAuthState = ()=> {                        //處理登入狀態後的頁面
@@ -86,7 +92,7 @@ export default {
       });
     }
 
-    const f = async ()=> {                                      //google-spreadsheet-API函式
+    const handleSheet = async ()=> {                                      //google-spreadsheet-API函式
       // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
       await doc.useServiceAccountAuth({                         //google-spreadsheet-API 金鑰設定
         client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
@@ -112,7 +118,8 @@ export default {
         name: props.data.name,                                  //會根據key值寫入value
         email: props.data.email ,
         date: time.localDate,
-        time: time.loaclTime
+        time: time.loaclTime,
+        state: workState.value
       });
 
 
@@ -135,10 +142,12 @@ export default {
       a1,
       rows,
       props,
-      f,
+      handleSheet,
       getTime,
       time,
-      handleSignOut
+      handleSignOut,
+      workState,
+      handleWorkstate
     }
   }
 
@@ -156,14 +165,14 @@ export default {
     .state
       .on.my-1
         label
-          input(type='radio' value=1 name='workstate' checked)
+          input(type='radio' name='workstate' checked @click='handleWorkstate($event)' value='上班')
           .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 上班
       .off.mt-2.mb-1
         label 
-          input(type='radio' value=0 name='workstate')
+          input(type='radio' name='workstate' @click='handleWorkstate($event)' value='下班')
           .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 下班
 
-    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='f(),getTime()') 打卡
+    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='handleSheet(),getTime()') 打卡
     button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='handleSignOut') 登出
 
 
@@ -198,8 +207,8 @@ export default {
     width 60%
     border-radius 16px
     position absolute
-    top -10%
-    left -10%
+    top -20%
+    left -20%
   .info
     padding 1rem
     // border 1px solid #222
