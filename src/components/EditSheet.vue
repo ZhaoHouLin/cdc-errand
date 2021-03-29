@@ -29,14 +29,19 @@ export default {
     const rows = ref()
 
     const time = reactive({
-
+      lastDate: '',
+      lastTime: ''
     })
+
+    const timeResult = reactive([])
 
     const authState = ref(false)
 
     const userData = ref()
 
-    const workState = ref('上班')
+    const workState = ref('上班')                       
+
+    const lastTime = ref()
 
     const getLocation = () => {                         
       if ('geolocation' in navigator) {                     //測試地理位置定位是否存在
@@ -60,7 +65,6 @@ export default {
       // time.milliseconds = new Date().getMilliseconds()
       time.localDate = new Date().toLocaleDateString()
       time.loaclTime = new Date().toLocaleTimeString()
-      console.log(time)
     }
 
     const handleWorkstate = (e)=> {
@@ -92,6 +96,19 @@ export default {
       });
     }
 
+    const getData = async (docID,sheetID,credentialsPath = './credentials.json')=> {
+      const timeResult = [];
+      const doc = new GoogleSpreadsheet(docID);
+      const creds = require(credentialsPath);
+      await doc.useServiceAccountAuth(creds);
+      await doc.loadInfo();
+      const sheet = doc.sheetsById[sheetID];
+      const rows = await sheet.getRows();
+      for (row of rows) {
+        result.push(row._rawData);
+      }
+    }
+
     const handleSheet = async ()=> {                                      //google-spreadsheet-API函式
       // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
       await doc.useServiceAccountAuth({                         //google-spreadsheet-API 金鑰設定
@@ -106,31 +123,29 @@ export default {
       await sheet.value.loadCells('A1:E10')
       const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
       // const cellC3 = sheet.value.getCellByA1('C3')           //取得c3的值的方式
-      // adding / removing sheets
-      // await newSheet.delete()
 
-      // create a sheet and set the header row
-      // sheet.value = await doc.addSheet({ headerValues: ['name', 'email'] });
-      // sheet.value = doc.sheetsById[996985920]
-      // append rows
+      const rows = await sheet.value.getRows();
 
+      rows.forEach(row => {                                     //處理使用者時間資料
+        if(row.name == props.data.name) {                       //只抓登入使用者的判斷
+          timeResult.push({                                     //將登入的使用者時間存起來
+            currentDate: row.currentdate,
+            currentTime: row.currenttime
+          })
+          time.lastDate = timeResult[timeResult.length-1].currentDate
+          time.lastTime = timeResult[timeResult.length-1].currentTime
+        } 
+      })
+      console.log(timeResult);
       const sendData = await sheet.value.addRow({               //將資料寫入sheet
         name: props.data.name,                                  //會根據key值寫入value
         email: props.data.email ,
-        date: time.localDate,
-        time: time.loaclTime,
+        currentdate: time.localDate,
+        currenttime: time.loaclTime,
+        lastdate: time.lastDate,
+        lasttime: time.lastTime,
         state: workState.value
-      });
-
-
-      // rows.value = await sheet.value.getRows(); // can pass in { limit, offset }
-
-      // read/write row values
-      // console.log(rows[0].name);
-      // rows[1].email = 'sergey@abc.xyz'; // update a value
-      // await rows[1].save(); // save updates
-      // await rows[1].delete(); // delete a row
-
+      })       
     }
 
     onMounted(()=> {
@@ -159,8 +174,8 @@ export default {
   img(:src="props.data.picture", alt="是你啦")
   .info
     h1 {{props.data.name}}
-    h2 {{time.localDate}}
-    h2 {{time.loaclTime}}
+    h2 上次打卡時間: {{time.lastDate}} {{time.lastTime}}
+    h2 本次打卡時間: {{time.localDate}} {{time.loaclTime}}
   .control.text-xl.font-extrabold
     .state
       .on.my-1
