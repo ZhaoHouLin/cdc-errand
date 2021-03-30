@@ -213,25 +213,6 @@ export default {
       button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
-
-//- .edit-sheet.container(v-if='props.bool')
-//-   .info.container.flex.flex-col.text-center
-//-     img.rounded-full.self-center(class='w-4/12' :src="props.data.picture", alt="alt")
-//-     .datatext(class='h-40')
-//-       h1 {{props.data.name}}
-//-       h2 {{time.localDate}}
-//-       h2 {{time.loaclTime}}
-
-//-   .insert.container.flex.justify-around
-//-     button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='f(),getTime()')() 打卡
-//-     .work-state.flex
-//-       .on
-//-         input(type='radio' value=1 name='workstate')
-//-         label(for=1) 上班
-//-       .off
-//-         input(type='radio' value=0 name='workstate')
-//-         label(for=2) 下班
-//-     button.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='handleSignOut') 登出
 </template>
 
 <style lang="stylus">
