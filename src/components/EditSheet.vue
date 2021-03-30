@@ -53,7 +53,9 @@ export default {
       }
     }
 
-    const getTime = ()=> {                                  //取得當前時間  
+    const getTime = ()=> {      
+      let today = new Date()    
+      let todayTime = today.getTime()                        //取得當前時間  
       // time.fullYear = new Date().getFullYear()           
       // time.month = new Date().getMonth()+1
       // time.date = new Date().getDate()
@@ -63,8 +65,13 @@ export default {
       // time.minutes = new Date().getMinutes() 
       // time.seconds = new Date().getSeconds()
       // time.milliseconds = new Date().getMilliseconds()
-      time.localDate = new Date().toLocaleDateString()
-      time.loaclTime = new Date().toLocaleTimeString()
+      // time.localDate = new Date().toLocaleDateString()
+      // time.loaclTime = new Date().toLocaleTimeString()
+      time.localDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`
+      time.loaclTime = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
+      time.dayMilliseconds = todayTime
+      // let test = todayTime.setTime()
+      console.log(today,todayTime);
     }
 
     const handleWorkstate = (e)=> {
@@ -96,18 +103,18 @@ export default {
       });
     }
 
-    const getData = async (docID,sheetID,credentialsPath = './credentials.json')=> {
-      const timeResult = [];
-      const doc = new GoogleSpreadsheet(docID);
-      const creds = require(credentialsPath);
-      await doc.useServiceAccountAuth(creds);
-      await doc.loadInfo();
-      const sheet = doc.sheetsById[sheetID];
-      const rows = await sheet.getRows();
-      for (row of rows) {
-        result.push(row._rawData);
-      }
-    }
+    // const getData = async (docID,sheetID,credentialsPath = './credentials.json')=> {
+    //   const timeResult = [];
+    //   const doc = new GoogleSpreadsheet(docID);
+    //   const creds = require(credentialsPath);
+    //   await doc.useServiceAccountAuth(creds);
+    //   await doc.loadInfo();
+    //   const sheet = doc.sheetsById[sheetID];
+    //   const rows = await sheet.getRows();
+    //   for (row of rows) {
+    //     result.push(row._rawData);
+    //   }
+    // }
 
     const handleSheet = async ()=> {                                      //google-spreadsheet-API函式
       // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
@@ -126,26 +133,32 @@ export default {
 
       const rows = await sheet.value.getRows();
 
-      rows.forEach(row => {                                     //處理使用者時間資料
+      await rows.forEach(row => {                                     //處理使用者時間資料
         if(row.name == props.data.name) {                       //只抓登入使用者的判斷
           timeResult.push({                                     //將登入的使用者時間存起來
             currentDate: row.currentdate,
-            currentTime: row.currenttime
+            currentTime: row.currenttime,
+            dayMilliseconds: row.daymilliseconds
           })
           time.lastDate = timeResult[timeResult.length-1].currentDate
           time.lastTime = timeResult[timeResult.length-1].currentTime
+          time.lastDayMilliseconds = timeResult[timeResult.length-1].dayMilliseconds
         } 
       })
-      console.log(timeResult);
+      // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
+      console.log('accumulatedHours',accumulatedHours)
       const sendData = await sheet.value.addRow({               //將資料寫入sheet
-        name: props.data.name,                                  //會根據key值寫入value
+        name: props.data.name,                                  //會根據key(第一列title)值寫入value
         email: props.data.email ,
         currentdate: time.localDate,
         currenttime: time.loaclTime,
         lastdate: time.lastDate,
         lasttime: time.lastTime,
+        daymilliseconds: time.dayMilliseconds,
+        lastdaymilliseconds: time.lastDayMilliseconds,
         state: workState.value
-      })       
+      })  
+      
     }
 
     onMounted(()=> {
