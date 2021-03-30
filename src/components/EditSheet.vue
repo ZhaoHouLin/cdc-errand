@@ -146,7 +146,7 @@ export default {
         } 
       })
       // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
-      console.log('accumulatedHours',accumulatedHours)
+      // console.log('accumulatedHours',accumulatedHours)
       const sendData = await sheet.value.addRow({               //將資料寫入sheet
         name: props.data.name,                                  //會根據key(第一列title)值寫入value
         email: props.data.email ,
@@ -183,25 +183,34 @@ export default {
 </script>
 
 <template lang='pug'>
-.content(v-if='props.bool')
+.content.bg-green-700(v-if='props.bool')
   img(:src="props.data.picture", alt="是你啦")
-  .info
-    h1 {{props.data.name}}
-    h2 上次打卡時間: {{time.lastDate}} {{time.lastTime}}
-    h2 本次打卡時間: {{time.localDate}} {{time.loaclTime}}
-  .control.text-xl.font-extrabold
-    .state
-      .on.my-1
+  .info.font-semibold.text-white
+    .user-name
+      .text-2xl {{props.data.name}}
+    .last-time
+      .text-3xl 上次打卡時間: 
+      .text-4xl {{time.lastDate}} {{time.lastTime}}
+    .current-time
+      .text-3xl 本次打卡時間: 
+      .text-4xl {{time.localDate}} {{time.loaclTime}}
+  .punch-in-out.text-xl.font-extrabold
+    .state(class='w-full h-2/3')
+      .on(class='h-1/3')
         label
           input(type='radio' name='workstate' checked @click='handleWorkstate($event)' value='上班')
-          .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 上班
-      .off.mt-2.mb-1
+          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 上班
+      .off(class='h-1/3')
         label 
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='下班')
-          .w-32.text.text-blue-500.py-2.px-4.font-semibold.rounded-lg.shadow-md.bg-white.border-2.border-blue-500.cursor-pointer 下班
-
-    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='handleSheet(),getTime()') 打卡
-    button.w-32.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-green-500.bg-white.border-2.border-green-500.my-1(class='hover:bg-green-500 hover:text-white' @click='handleSignOut') 登出
+          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 下班
+      .out(class='h-1/3')
+        label 
+          input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
+          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
+    .control.bg-green-500(class='w-full h-1/3')
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.border-b.border-green-700.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSheet(),getTime()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
 
@@ -228,37 +237,49 @@ export default {
 <style lang="stylus">
 @import '../css/style.styl'
 .content
-  size(60%,30vh)
+  size(100%,100vh,0)
   position relative
-  border 1px solid #222
+  // border 1px solid #222
   img
-    width 60%
-    border-radius 16px
+    width 40%
+    // border-radius 16px
     position absolute
-    top -20%
-    left -20%
   .info
     padding 1rem
     // border 1px solid #222
     // flexCenter(flex-start,center,column)
-    size(70%,40%)
-    position absolute
-    top 55%
-  .control
+    size(80vw,auto)
+    posCenter(0%,50%)
+
+    .last-time,.current-time
+      margin 2rem 0
+      // border 1px solid #222
+    .last-time,.current-time
+      size(auto,8rem,0px)
+      // border 1px solid #222
+  .punch-in-out
+    size(20vw,100vh)
     flexCenter(flex-start,,column)
     position absolute
-    right -20%
-    top 10%
-    // > *
-    //   border 1px solid #222
+    right 0%
     .state
-      .on,.off
+      background-color rgba(16, 185, 129, 1)
+      .on,.off,.out
         input
-          // opacity 0
           display none
+          height 100px
+          background-color green
+          size(auto,100%)
         input:checked + .text
-          background-color rgba(59, 130, 246, 1)
-          color white
+          background-color rgba(6, 95, 70, 1)
+          // color white
+          // border-radius 2rem 0 2rem 0
+        label
+          padding 20px 0
         label .text
           flexCenter()
+    .control
+      button
+        outline none
+    //   border 1px solid #222
 </style>

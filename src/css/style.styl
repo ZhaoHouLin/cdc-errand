@@ -16,6 +16,12 @@ flexCenter(j=center,a=j,d=row)
   align-items a
   flex-direction d
 
+posCenter(l=50%,t=50%)
+  position absolute
+  left l
+  top t
+  transform translate(-(l),-(t))
+
 html,body
   width 100%
   height 100%
