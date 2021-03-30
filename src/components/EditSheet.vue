@@ -74,7 +74,8 @@ export default {
       // time.loaclTime = new Date().toLocaleTimeString()
       let formatMinutes = formatTime(today.getMinutes())
       let formatSeconds = formatTime(today.getSeconds())
-      time.localDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`
+      let formatMonth = formatTime(today.getMonth()+1)
+      time.localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
       time.loaclTime = `${today.getHours()}:${formatMinutes}:${formatSeconds}`
       time.dayMilliseconds = todayTime
       // let test = todayTime.setTime()
