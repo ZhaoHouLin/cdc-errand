@@ -53,6 +53,11 @@ export default {
       }
     }
 
+    const formatTime = (val)=> {                    //格式化時間(00:00)
+      let dTimes = '00'+val
+      return `${dTimes.substring(dTimes.length-2)}`
+    }
+
     const getTime = ()=> {      
       let today = new Date()    
       let todayTime = today.getTime()                        //取得當前時間  
@@ -67,8 +72,10 @@ export default {
       // time.milliseconds = new Date().getMilliseconds()
       // time.localDate = new Date().toLocaleDateString()
       // time.loaclTime = new Date().toLocaleTimeString()
+      let formatMinutes = formatTime(today.getMinutes())
+      let formatSeconds = formatTime(today.getSeconds())
       time.localDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`
-      time.loaclTime = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
+      time.loaclTime = `${today.getHours()}:${formatMinutes}:${formatSeconds}`
       time.dayMilliseconds = todayTime
       // let test = todayTime.setTime()
       console.log(today,todayTime);
