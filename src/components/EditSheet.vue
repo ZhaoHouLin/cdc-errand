@@ -21,7 +21,7 @@ export default {
       return store.getters.timeData
     })
 
-    const { sheet } = apiGoogleSpreadSheet()
+    const { loadSheetData,sendData } = apiGoogleSpreadSheet()
 
     const timeResult = reactive([])
 
@@ -153,19 +153,17 @@ export default {
     // }
 
     onMounted(()=> {
-
+      loadSheetData()
     })
 
     return {
-      sheet,
-      a1,
-      rows,
       getTime,
       handleSignOut,
       handleWorkstate,
       loginUserInfoData,
       authState,
-      sheet,
+      loadSheetData,
+      sendData,
       timeData
     }
   }
@@ -200,7 +198,7 @@ export default {
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500(class='w-full h-1/3')
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sheet(),getTime()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData(),getTime()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
