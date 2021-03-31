@@ -1,5 +1,10 @@
 export default {
   loginUserInfo: {
   },
-  authState: false
+  authState: false,
+  time: {
+    lastDate: '',
+    lastTime: ''
+  },
+  workState: '上班'
 }

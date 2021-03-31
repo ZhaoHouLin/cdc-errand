@@ -4,5 +4,11 @@ export default {
   },
   authStateData(state) {
     return state.authState
+  },
+  timeData(state) {
+    return state.time
+  },
+  workStateData(state) {
+    return state.workState
   }
 }

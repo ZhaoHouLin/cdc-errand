@@ -1,5 +1,5 @@
 <script>
-import { GoogleSpreadsheet } from "google-spreadsheet"
+// import { GoogleSpreadsheet } from "google-spreadsheet"
 import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFireStore , googleFirebase } from '../db'
 import { useStore } from 'vuex'
@@ -17,28 +17,15 @@ export default {
       return store.getters.authStateData
     })
 
-    // Initialize the sheet - doc ID is the long id in the sheets URL
-    // google-sheet ID
-    // const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
-
-    const sheetData = ()=> {
-      apiGoogleSpreadSheet()
-    }
-
-    const sheet = ref()                                     //存放google-sheet
-    const a1 = ref()                                        //存放google-spreadsheet左上角起始定位
-    const rows = ref()
-
-    const time = reactive({
-      lastDate: '',
-      lastTime: ''
+    const timeData = computed(()=> {
+      return store.getters.timeData
     })
+
+    const { sheet } = apiGoogleSpreadSheet()
 
     const timeResult = reactive([])
 
-    const userData = ref()
-
-    const workState = ref('上班')                       
+    const userData = ref()                  
 
     const lastTime = ref()
 
@@ -73,15 +60,15 @@ export default {
       let formatMinutes = formatTime(today.getMinutes())
       let formatSeconds = formatTime(today.getSeconds())
       let formatMonth = formatTime(today.getMonth()+1)
-      time.localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
-      time.loaclTime = `${today.getHours()}:${formatMinutes}:${formatSeconds}`
-      time.dayMilliseconds = todayTime
-      // let test = todayTime.setTime()
-      console.log(today,todayTime);
+      let localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
+      let loaclTime = `${today.getHours()}:${formatMinutes}:${formatSeconds}`
+      let dayMilliseconds = todayTime
+      store.dispatch('commitTime',{localDate,loaclTime,dayMilliseconds})
+
     }
 
     const handleWorkstate = (e)=> {
-      workState.value = e.target.value
+      store.dispatch('commitWorkState',e.target.value)
     }
 
     const handleAuthState = ()=> {                        //處理登入狀態後的頁面
@@ -173,15 +160,13 @@ export default {
       sheet,
       a1,
       rows,
-      // handleSheet,
       getTime,
-      time,
       handleSignOut,
-      workState,
       handleWorkstate,
       loginUserInfoData,
       authState,
-      sheetData
+      sheet,
+      timeData
     }
   }
 
@@ -196,10 +181,10 @@ export default {
       .text-2xl {{loginUserInfoData.name}}
     .last-time
       .text-3xl 上次打卡時間: 
-      .text-4xl {{time.lastDate}} {{time.lastTime}}
+      .text-4xl {{timeData.lastDate}} {{timeData.lastTime}}
     .current-time
       .text-3xl 本次打卡時間: 
-      .text-4xl {{time.localDate}} {{time.loaclTime}}
+      .text-4xl {{timeData.localDate}} {{timeData.loaclTime}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
@@ -215,7 +200,7 @@ export default {
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500(class='w-full h-1/3')
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sheetData(),getTime()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sheet(),getTime()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
