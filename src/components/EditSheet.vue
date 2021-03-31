@@ -2,23 +2,19 @@
 import { GoogleSpreadsheet } from "google-spreadsheet"
 import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFireStore , googleFirebase } from '../db'
+import { useStore } from 'vuex'
 export default {
-  props: {                                                //接收App.vue用
-    bool: {
-      type: Boolean,
-      default: true
-    },
-    data: {                                               
-      type: Object,
-      default: ()=> ({}) 
-    }
-  },
-  emits: {
-    emitAuthState: (authState)=> {                        //向App.vue傳遞用
-      return authState
-    },
-  },
-  setup(props,{emit}) {
+  setup() {
+
+    const store = useStore()
+
+    const loginUserInfoData = computed(()=> {
+      return store.getters.loginUserInfoData
+    })
+
+    const authState = computed(()=> {
+      return store.getters.authStateData
+    })
 
     // Initialize the sheet - doc ID is the long id in the sheets URL
     // google-sheet ID
@@ -35,8 +31,6 @@ export default {
 
     const timeResult = reactive([])
 
-    const authState = ref(false)
-
     const userData = ref()
 
     const workState = ref('上班')                       
@@ -48,7 +42,6 @@ export default {
         navigator.geolocation.getCurrentPosition((pos) => { //取得使用者目前經緯度
           let latitude = pos.coords.latitude
           let longitude = pos.coords.longitude
-
         })
       }
     }
@@ -89,12 +82,9 @@ export default {
     const handleAuthState = ()=> {                        //處理登入狀態後的頁面
       googleFirebase.auth().onAuthStateChanged(()=> {
         if (userData.value) {
-          authState.value = true
-          emit('emitAuthState',authState)                 //發送登入狀態到App.vue
+          store.dispatch('commitAuthState',true)
         } else {
-          authState.value = false
-          emit('emitAuthState',authState)
-          console.log(authState.value);
+          store.dispatch('commitAuthState',false)
         }
       })
     }
@@ -124,7 +114,8 @@ export default {
     //   }
     // }
 
-    const handleSheet = async ()=> {                                      //google-spreadsheet-API函式
+    const handleSheet = async ()=> {    
+                                       //google-spreadsheet-API函式
       // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
       await doc.useServiceAccountAuth({                         //google-spreadsheet-API 金鑰設定
         client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
@@ -141,8 +132,8 @@ export default {
 
       const rows = await sheet.value.getRows();
 
-      await rows.forEach(row => {                                     //處理使用者時間資料
-        if(row.name == props.data.name) {                       //只抓登入使用者的判斷
+      await rows.forEach(row => {                                    //處理使用者時間資料
+        if(row.name == loginUserInfoData.value.name) {                       //只抓登入使用者的判斷
           timeResult.push({                                     //將登入的使用者時間存起來
             currentDate: row.currentdate,
             currentTime: row.currenttime,
@@ -156,8 +147,8 @@ export default {
       // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
       // console.log('accumulatedHours',accumulatedHours)
       const sendData = await sheet.value.addRow({               //將資料寫入sheet
-        name: props.data.name,                                  //會根據key(第一列title)值寫入value
-        email: props.data.email ,
+        name: loginUserInfoData.value.name,                           //會根據key(第一列title)值寫入value
+        email: loginUserInfoData.value.email ,
         currentdate: time.localDate,
         currenttime: time.loaclTime,
         lastdate: time.lastDate,
@@ -177,13 +168,14 @@ export default {
       sheet,
       a1,
       rows,
-      props,
       handleSheet,
       getTime,
       time,
       handleSignOut,
       workState,
-      handleWorkstate
+      handleWorkstate,
+      loginUserInfoData,
+      authState
     }
   }
 
@@ -191,11 +183,11 @@ export default {
 </script>
 
 <template lang='pug'>
-.content.bg-green-700(v-if='props.bool')
-  img(:src="props.data.picture", alt="是你啦")
+.content.bg-green-700(v-if='authState')
+  img(:src="loginUserInfoData.picture", alt="是你啦")
   .info.font-semibold.text-white
     .user-name
-      .text-2xl {{props.data.name}}
+      .text-2xl {{loginUserInfoData.name}}
     .last-time
       .text-3xl 上次打卡時間: 
       .text-4xl {{time.lastDate}} {{time.lastTime}}

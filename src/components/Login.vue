@@ -1,6 +1,7 @@
 <script>
 import { googleFireStore , googleFirebase } from '../db'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useStore } from 'vuex'
 export default {
   props: {                                              //接收App.vue用
     bool: {
@@ -9,37 +10,33 @@ export default {
     }
   },
   emits: {                                              //向App.vue傳遞用
-    emitAuthState: (authState)=> {
-      return authState
-    },
     emitData: (data)=> {
       return data
     }
   },
 
-  setup(props,{emit}) {
+  setup(props) {
 
-    const open = ref(true)
+    const store = useStore()
+    
+    const authState = computed(()=> {
+      return store.getters.authStateData
+    })
+
     let cover = ref()
     let userEmail = ref('')
     let userPassword = ref('')
 
     let errorMsg = ref('')
 
-    const authState = ref(false)
-
-    const loginUserInfo = reactive({})
-
     const userData = ref()
 
     const handleAuthState = ()=> {                        //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
         if (userData.value) {
-          authState.value = true
-          emit('emitAuthState',authState)
+          store.dispatch('commitAuthState',true)
         } else {
-          authState.value = false
-          emit('emitAuthState',authState)
+          store.dispatch('commitAuthState',false)
         }
       })
     }
@@ -56,9 +53,7 @@ export default {
         .then((result) => {
           /** @type {firebase.auth.OAuthCredential} */
           userData.value = googleFirebase.auth().currentUser
-          console.log(result.additionalUserInfo.profile.picture);
-          loginUserInfo.data = result.additionalUserInfo.profile
-          emit('emitData',loginUserInfo.data)               //發送使用者登入資料到App.vue
+          store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile)
           handleAuthState()
         })
         .catch((error) => {
@@ -97,11 +92,7 @@ export default {
 </script>
 
 <template lang='pug'>
-      
-//- a.login-button.py-2.px-4.font-semibold.rounded-lg.shadow-md.text-white.bg-green-500(class='hover:bg-green-700' @click='googleSignIn' v-if='!props.bool')
-//-   | 疾管署 google帳號登入
-
-.min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!props.bool')
+.min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authState')
   .max-w-xl.w-full.space-y-8
     div
       img.mx-auto.h-12.w-auto(src='https://www.cdc.gov.tw/Images/logo_1.svg' alt='Workflow')
