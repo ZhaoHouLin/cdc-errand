@@ -3,19 +3,7 @@ import { googleFireStore , googleFirebase } from '../db'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 export default {
-  props: {                                              //接收App.vue用
-    bool: {
-      type: Boolean,
-      default: true
-    }
-  },
-  emits: {                                              //向App.vue傳遞用
-    emitData: (data)=> {
-      return data
-    }
-  },
-
-  setup(props) {
+  setup() {
 
     const store = useStore()
     
@@ -85,7 +73,6 @@ export default {
       authState,
       cover,
       errorMsg,
-      props
     }
   }
 }
