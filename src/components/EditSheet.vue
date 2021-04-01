@@ -12,7 +12,7 @@ export default {
       return store.getters.loginUserInfoData
     })
 
-    const authState = computed(()=> {
+    const authStateData = computed(()=> {
       return store.getters.authStateData
     })
 
@@ -46,8 +46,10 @@ export default {
       googleFirebase.auth().signOut().then(() => {
         console.log('Sign-out successful.');
         userData.value = googleFirebase.auth().currentUser
-        time.localDate = ''
-        time.loaclTime = ''
+        let currentDate = ``
+        let currentTime = ``
+        let dayMilliseconds = ``
+        store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds })
         handleAuthState()
       }).catch((error) => {
         // An error happened.
@@ -76,7 +78,7 @@ export default {
       handleSignOut,
       handleWorkstate,
       loginUserInfoData,
-      authState,
+      authStateData,
       loadSheetData,
       sendData,
       stateCurrentTimeData,
@@ -88,7 +90,7 @@ export default {
 </script>
 
 <template lang='pug'>
-.content.bg-green-700(v-if='authState')
+.content.bg-green-700(v-if='authStateData')
   img(:src="loginUserInfoData.picture", alt="是你啦")
   .info.font-semibold.text-white
     .user-name

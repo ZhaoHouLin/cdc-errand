@@ -8,7 +8,7 @@ export default {
 
     const store = useStore()
     
-    const authState = computed(()=> {
+    const authStateData = computed(()=> {
       return store.getters.authStateData
     })
 
@@ -74,7 +74,7 @@ export default {
       userPassword,
       googleSignIn,
       handleSignOut,
-      authState,
+      authStateData,
       cover,
       errorMsg,
     }
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <template lang='pug'>
-.min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authState')
+.min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div
       img.mx-auto.h-12.w-auto(src='https://www.cdc.gov.tw/Images/logo_1.svg' alt='Workflow')
