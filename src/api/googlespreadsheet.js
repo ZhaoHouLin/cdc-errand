@@ -1,8 +1,11 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { apiCommonFn } from './index'
 
 const handleSheet = ()=> {
+
+  const { getTime } = apiCommonFn()
 
   const store = useStore()
 
@@ -38,7 +41,7 @@ const handleSheet = ()=> {
   const loadSheetData = async () => {
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
     //google-spreadsheet-API函式
-    
+    await getTime()
     //google-spreadsheet-API 金鑰設定
     await doc.useServiceAccountAuth({                         
       client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
