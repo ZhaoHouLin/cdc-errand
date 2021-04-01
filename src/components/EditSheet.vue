@@ -57,11 +57,12 @@ export default {
       // time.milliseconds = new Date().getMilliseconds()
       // time.localDate = new Date().toLocaleDateString()
       // time.loaclTime = new Date().toLocaleTimeString()
+      let formatHours = formatTime(today.getHours())
       let formatMinutes = formatTime(today.getMinutes())
       let formatSeconds = formatTime(today.getSeconds())
       let formatMonth = formatTime(today.getMonth()+1)
       let localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
-      let loaclTime = `${today.getHours()}:${formatMinutes}:${formatSeconds}`
+      let loaclTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
       let dayMilliseconds = todayTime
       store.dispatch('commitTime',{localDate,loaclTime,dayMilliseconds})
 
