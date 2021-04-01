@@ -1,5 +1,4 @@
 <script>
-// import { GoogleSpreadsheet } from "google-spreadsheet"
 import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFireStore , googleFirebase } from '../db'
 import { useStore } from 'vuex'
@@ -17,57 +16,17 @@ export default {
       return store.getters.authStateData
     })
 
-    const timeData = computed(()=> {
-      return store.getters.timeData
+    const stateCurrentTimeData = computed(()=> {
+      return store.getters.stateCurrentTimeData
     })
 
-    const { loadSheetData,sendData } = apiGoogleSpreadSheet()
-    // const { formatTime, getTime } = apiCommonFn()
+    const stateLastTimeData = computed(()=> {
+      return store.getters.stateLastTimeData
+    })
 
-    const timeResult = reactive([])
+    const { loadSheetData, sendData } = apiGoogleSpreadSheet()
 
     const userData = ref()                  
-
-    const lastTime = ref()
-
-    // const getLocation = () => {                         
-    //   if ('geolocation' in navigator) {                     //測試地理位置定位是否存在
-    //     navigator.geolocation.getCurrentPosition((pos) => { //取得使用者目前經緯度
-    //       let latitude = pos.coords.latitude
-    //       let longitude = pos.coords.longitude
-    //     })
-    //   }
-    // }
-
-    // const formatTime = (val)=> {                    //格式化時間(00:00)
-    //   let dTimes = '00'+val
-    //   return `${dTimes.substring(dTimes.length-2)}`
-    // }
-
-    // const getTime = ()=> {      
-    //   let today = new Date()    
-    //   let todayTime = today.getTime()                        //取得當前時間  
-    //   // time.fullYear = new Date().getFullYear()           
-    //   // time.month = new Date().getMonth()+1
-    //   // time.date = new Date().getDate()
-    //   // time.day = new Date().getDay()
-
-    //   // time.hours = new Date().getHours()
-    //   // time.minutes = new Date().getMinutes() 
-    //   // time.seconds = new Date().getSeconds()
-    //   // time.milliseconds = new Date().getMilliseconds()
-    //   // time.localDate = new Date().toLocaleDateString()
-    //   // time.loaclTime = new Date().toLocaleTimeString()
-    //   let formatHours = formatTime(today.getHours())
-    //   let formatMinutes = formatTime(today.getMinutes())
-    //   let formatSeconds = formatTime(today.getSeconds())
-    //   let formatMonth = formatTime(today.getMonth()+1)
-    //   let localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
-    //   let loaclTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
-    //   let dayMilliseconds = todayTime
-    //   store.dispatch('commitTime',{localDate,loaclTime,dayMilliseconds})
-
-    // }
 
     const handleWorkstate = (e)=> {
       store.dispatch('commitWorkState',e.target.value)
@@ -108,54 +67,8 @@ export default {
     //   }
     // }
 
-    // const handleSheet = async ()=> {    
-    //                                    //google-spreadsheet-API函式
-    //   // Initialize Auth - see more available options at https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
-    //   await doc.useServiceAccountAuth({                         //google-spreadsheet-API 金鑰設定
-    //     client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
-    //     private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCvkuzJz4+SKJQT\nG8uFsNeTefdkrtZTwbVZn/DtDffcRrMKVpLweVgI1j2wdw8U/iLc7ctoIrAEQXqU\nQAMAJDF16Qg5/myjIqyls7nTZSPwmNnLkjPBwPPy7u6GUtKTM3y9y/zHBXVWZQJn\nOaUI6JKgFGC1ZhEXE9Zw8MeIY6AO+iR/rvCrkp/+3gBMevJHmiHjC8zeod9iP67w\nmzr8l6IA6V2h7GBkNmXXg3NZu9N6++vZSc981uzBwpM9qtkUR9f+eRMjys1MdKxV\nU0KO+zMF3x2Q+0VTptnxAMY55HwXqey8dIShYcWH41sdp7tJ/eD20uqykZMhw0iD\nsIen7b2zAgMBAAECggEAAWHiw2QC+V+gatYZMCBIUjzvmbdWsKohx2be+r7VaMKV\nvksYNRR/gPJO4gjN8ZhepeapZ1R+lkn9sRUf8OxYB1miWvKJ4G7xdQyJNgTh148c\nh+HKzoe6Y/tFnYEhb09EeCoW/2onllqNPkrR5dQO83u1lzgKgmgBlDoRGB3QsM18\nCqj5rsKZ2sW8HA5hbJLo17uoFTYjaryBbnIcnrwy8Edvu4ikE7ZKgIUmD2KGqjke\nHZFbg+59Qh3sIckdzzULIyeUEXCSfbDfqLa4dLYGQTLoEP7V9uWrUHfrxAzmQ4B/\nLrcBReS/jgZy+K2Xv3uxE8sUjMHhcpr23WjupCn7gQKBgQDlxz889+TMazEovpTe\nYXlHwmMd0fCrXMX5bC7O8K65F6Y38am1BIeDeEHrh/BQ7sLt9jFCRur1iywpT3XZ\nM7ott+Zdut1xM2bU9fbWxHK8EVEQfz2JbrfAtxSb4tuup+QYbMTtmpBeX94OMfwD\n6c6YXvTcLpb4y09bTYKSppxcYwKBgQDDnCYbBuMaVlwIRzS5IX9ns0OQ2fpRWtjh\nsksmK0FhunDI7ZgyJPU6R52FkgATC1aXWHFRCUStfHOPx+HaAtvhvkeu84YzSP9H\ns4OH2ym41DoTEkkqKpK27OgUhlUMvch3blpDO2WFiERPVo28y6AfLKBd+dfFwWlG\nVAwx+w4ScQKBgQDky+5LHieD6ORtRr/jYzmpW4ToR4iWiW1UPAWr53qDMWpAYHD0\nn0r0fQVequB/Jg+RdUh9TzJcRzU0+TtGiLxFE83d3NjtBBrLyRL9rWT1oWSPwbMb\nqtRrn6F0y4KlueVk8MFyOiqw3lK03c6sct5VWJAGwplvqLofFuICdsZRMwKBgCRV\nQ6qve81vjwammz9r3mtXm8wzANDNrA03/cdoL2vEoqBfqW5e+QHLPZIKzWK8L2hL\nMDkaHJyQyjJBsUy6TTdADbaMWzf5bhlWWa8JYVWIbgUO13IymC/MD0uIrBGCytKM\nN83XIYNNDUsjS45u0B4aPutVteNwimpawC0kcbexAoGAF/yGDVUtoytMAoCf8IbK\nv9SpJ6iDEMK3NXiwMnSRJyr/bp+mS5amKBHct0yeZFlJrPzq0FTLKyqd1v08iCOL\n+bW5MXDuyN/ZtcABFSsqoT6snnleKp3Qijk8pWQyGt0ca5SzoU4z8GJ4k2HfLNNN\nFfhNj/I6cnrDDU2VDkgerCY=\n-----END PRIVATE KEY-----\n",
-    //   });
-      
-    //   await doc.loadInfo() // loads document properties and worksheets
-      
-    //   sheet.value = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-
-    //   await sheet.value.loadCells('A1:E10')
-    //   const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
-    //   // const cellC3 = sheet.value.getCellByA1('C3')           //取得c3的值的方式
-
-    //   const rows = await sheet.value.getRows();
-
-    //   await rows.forEach(row => {                                    //處理使用者時間資料
-    //     if(row.name == loginUserInfoData.value.name) {                       //只抓登入使用者的判斷
-    //       timeResult.push({                                     //將登入的使用者時間存起來
-    //         currentDate: row.currentdate,
-    //         currentTime: row.currenttime,
-    //         dayMilliseconds: row.daymilliseconds
-    //       })
-    //       time.lastDate = timeResult[timeResult.length-1].currentDate
-    //       time.lastTime = timeResult[timeResult.length-1].currentTime
-    //       time.lastDayMilliseconds = timeResult[timeResult.length-1].dayMilliseconds
-    //     } 
-    //   })
-    //   // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
-    //   // console.log('accumulatedHours',accumulatedHours)
-    //   const sendData = await sheet.value.addRow({               //將資料寫入sheet
-    //     name: loginUserInfoData.value.name,                           //會根據key(第一列title)值寫入value
-    //     email: loginUserInfoData.value.email ,
-    //     currentdate: time.localDate,
-    //     currenttime: time.loaclTime,
-    //     lastdate: time.lastDate,
-    //     lasttime: time.lastTime,
-    //     daymilliseconds: time.dayMilliseconds,
-    //     lastdaymilliseconds: time.lastDayMilliseconds,
-    //     state: workState.value
-    //   })  
-      
-    // }
-
     onMounted(()=> {
-      loadSheetData()
+      // loadSheetData()
     })
 
     return {
@@ -166,7 +79,8 @@ export default {
       authState,
       loadSheetData,
       sendData,
-      timeData
+      stateCurrentTimeData,
+      stateLastTimeData
     }
   }
 
@@ -181,10 +95,10 @@ export default {
       .text-2xl {{loginUserInfoData.name}}
     .last-time
       .text-3xl 上次打卡時間: 
-      .text-4xl {{timeData.lastDate}} {{timeData.lastTime}}
+      .text-4xl {{stateLastTimeData.lastDate}} {{stateLastTimeData.lastTime}}
     .current-time
       .text-3xl 本次打卡時間: 
-      .text-4xl {{timeData.localDate}} {{timeData.loaclTime}}
+      .text-4xl {{stateCurrentTimeData.currentDate}} {{stateCurrentTimeData.currentTime}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')

@@ -5,8 +5,11 @@ export default {
   commitAuthState({commit},boolean) {
     commit('stateAuthState',boolean)
   },
-  commitTime({commit},payload) {
-    commit('stateTime',payload)
+  commitCurrentTime({commit},payload) {
+    commit('stateCurrentTime',payload)
+  },
+  commitLastTime({commit}, payload) {
+    commit('stateLastTime', payload)
   },
   commitWorkState({commit},str) {
     commit('stateWorkState',str)

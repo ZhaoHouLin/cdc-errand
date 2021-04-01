@@ -1,5 +1,5 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { apiCommonFn } from './index'
 
@@ -13,27 +13,34 @@ const handleSheet = ()=> {
     return store.getters.loginUserInfoData
   })
 
-  const timeData = computed(() => {
-    return store.getters.timeData
+  const stateCurrentTimeData = computed(() => {
+    return store.getters.stateCurrentTimeData
+  })
+
+  const stateLastTimeData = computed(() => {
+    return store.getters.stateLastTimeData
   })
 
   const workStateData = computed(() => {
     return store.getters.workStateData
   })
 
+  const timeResult = reactive([])
+
   const sheet = ref()
 
   const sendData = async ()=> {
-    loadSheetData()
+    await loadSheetData()
+    await getTime()
     const data = await sheet.value.addRow({               //將資料寫入sheet
       name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
       email: loginUserInfoData.value.email,
-      currentdate: timeData.value.localDate,
-      currenttime: timeData.value.loaclTime,
-      lastdate: timeData.value.lastDate,
-      lasttime: timeData.value.lastTime,
-      daymilliseconds: timeData.value.dayMilliseconds,
-      lastdaymilliseconds: timeData.value.lastDayMilliseconds,
+      currentdate: stateCurrentTimeData.value.currentDate,
+      currenttime: stateCurrentTimeData.value.currentTime,
+      lastdate: stateLastTimeData.value.lastDate,
+      lasttime: stateLastTimeData.value.lastTime,
+      daymilliseconds: stateCurrentTimeData.value.dayMilliseconds,
+      lastdaymilliseconds: stateLastTimeData.value.lastDayMilliseconds,
       state: workStateData.value
     })
   }
@@ -41,7 +48,8 @@ const handleSheet = ()=> {
   const loadSheetData = async () => {
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
     //google-spreadsheet-API函式
-    await getTime()
+    // await getTime()
+
     //google-spreadsheet-API 金鑰設定
     await doc.useServiceAccountAuth({                         
       client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
@@ -52,45 +60,35 @@ const handleSheet = ()=> {
     
     // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
     sheet.value = doc.sheetsByIndex[0] 
-  
-    await sheet.value.loadCells('A1:E10')
-    const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
+
+    
+    // await sheet.value.loadCells('A1:E10')
+    // const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
     // const cellC3 = sheet.value.getCellByA1('C3')           //取得c3的值的方式
   
     const rows = await sheet.value.getRows()
   
-    // await rows.forEach(row => {                               //處理使用者時間資料
-    //   if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
-    //     timeResult.push({                                     //將登入的使用者時間存起來
-    //       currentDate: row.currentdate,
-    //       currentTime: row.currenttime,
-    //       dayMilliseconds: row.daymilliseconds
-    //     })
-    //     time.lastDate = timeResult[timeResult.length - 1].currentDate
-    //     time.lastTime = timeResult[timeResult.length - 1].currentTime
-    //     time.lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
-    //   }
-    // })
+    await rows.forEach(row => {                               //處理使用者時間資料
+      if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
+        timeResult.push({                                     //將登入的使用者時間存起來
+          currentDate: row.currentdate,
+          currentTime: row.currenttime,
+          dayMilliseconds: row.daymilliseconds
+        })
+        let lastDate = timeResult[timeResult.length - 1].currentDate
+        let lastTime = timeResult[timeResult.length - 1].currentTime
+        let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
+        store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds })
+      }
+    })
 
     // // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
     // // console.log('accumulatedHours',accumulatedHours)
-
-    // const sendData = await sheet.addRow({               //將資料寫入sheet
-    //   name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
-    //   email: loginUserInfoData.value.email,
-    //   currentdate: timeData.value.localDate,
-    //   currenttime: timeData.value.loaclTime,
-    //   lastdate: timeData.value.lastDate,
-    //   lasttime: timeData.value.lastTime,
-    //   daymilliseconds: timeData.value.dayMilliseconds,
-    //   lastdaymilliseconds: timeData.value.lastDayMilliseconds,
-    //   state: workStateData.value
-    // })
   }
 
   return {
     loadSheetData,
-    sendData
+    sendData,
   }
 }
 

@@ -5,14 +5,15 @@ export default {
   stateAuthState(state,boolean) {
     state.authState = boolean
   },
-  stateTime(state,payload) {
-    state.time.localDate = payload.localDate
-    state.time.loaclTime = payload.loaclTime
-    state.time.lastDate = payload.lastDate
-    state.time.lastTime = payload.lastTime
-    state.time.dayMilliseconds = payload.dayMilliseconds
-    state.time.lastDayMilliseconds = payload.lastDayMilliseconds
-    console.log(state.time);
+  stateCurrentTime(state,payload) {
+    state.stateCurrentTime.currentDate = payload.currentDate
+    state.stateCurrentTime.currentTime = payload.currentTime
+    state.stateCurrentTime.dayMilliseconds = payload.dayMilliseconds
+  },
+  stateLastTime(state, payload) {
+    state.stateLastTime.lastDate = payload.lastDate
+    state.stateLastTime.lastTime = payload.lastTime
+    state.stateLastTime.lastDayMilliseconds = payload.lastDayMilliseconds
   },
   stateWorkState(state,str) {
     state.workState = str

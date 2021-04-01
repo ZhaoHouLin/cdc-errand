@@ -2,6 +2,7 @@
 import { googleFireStore , googleFirebase } from '../db'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { apiGoogleSpreadSheet } from '../api'
 export default {
   setup() {
 
@@ -10,6 +11,8 @@ export default {
     const authState = computed(()=> {
       return store.getters.authStateData
     })
+
+    const { loadSheetData } = apiGoogleSpreadSheet()
 
     let cover = ref()
     let userEmail = ref('')
@@ -43,6 +46,7 @@ export default {
           userData.value = googleFirebase.auth().currentUser
           store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile)
           handleAuthState()
+          loadSheetData()
         })
         .catch((error) => {
           // Handle Errors here.

@@ -36,10 +36,10 @@ const fn = ()=> {
     let formatMinutes = formatTime(today.getMinutes())
     let formatSeconds = formatTime(today.getSeconds())
     let formatMonth = formatTime(today.getMonth() + 1)
-    let localDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
-    let loaclTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
+    let currentDate = `${today.getFullYear()}/${formatMonth}/${today.getDate()}`
+    let currentTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
     let dayMilliseconds = todayTime
-    store.dispatch('commitTime', { localDate, loaclTime, dayMilliseconds })
+    store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds })
 
   }
 
