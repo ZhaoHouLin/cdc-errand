@@ -13,5 +13,8 @@ export default {
   },
   commitWorkState({commit},str) {
     commit('stateWorkState',str)
+  },
+  commitUserCoordinates({commit},payload) {
+    commit('stateUserCoordinates',payload)
   }
 }

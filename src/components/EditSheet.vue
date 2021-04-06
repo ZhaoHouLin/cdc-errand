@@ -24,7 +24,13 @@ export default {
       return store.getters.stateLastTimeData
     })
 
+    const userCoordinatesData = computed(()=> {
+      return store.getters.userCoordinatesData
+    })
+
     const { loadSheetData, sendData } = apiGoogleSpreadSheet()
+
+    const { getLocation } = apiCommonFn()
 
     const userData = ref()                  
 
@@ -70,7 +76,7 @@ export default {
     // }
 
     onMounted(()=> {
-      // loadSheetData()
+      getLocation()
     })
 
     return {
@@ -82,7 +88,8 @@ export default {
       loadSheetData,
       sendData,
       stateCurrentTimeData,
-      stateLastTimeData
+      stateLastTimeData,
+      userCoordinatesData
     }
   }
 
@@ -101,6 +108,10 @@ export default {
     .current-time.pl-4
       .text-2xl.mb-2 本次打卡時間: 
       .text-4xl {{stateCurrentTimeData.currentDate}} {{stateCurrentTimeData.currentTime}}
+    .coordinates.pl-4
+      .text-2xl 您的位置:
+      .txxt-xl {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
+
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
@@ -134,10 +145,10 @@ export default {
     position absolute
   .info
     padding 1rem
-    // border 1px solid #222
+    border 1px solid #222
     // flexCenter(flex-start,center,column)
     size(80vw,auto)
-    posCenter(0%,50%)
+    posCenter(0%,60%)
 
     .last-time,.current-time
       margin 2rem 0

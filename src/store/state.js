@@ -6,5 +6,9 @@ export default {
   },
   stateLastTime: {
   },
-  workState: '上班'
+  workState: '上班',
+  userCoordinates: {
+    latitude: '',
+    longitude: ''
+  },
 }

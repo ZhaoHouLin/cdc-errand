@@ -17,5 +17,9 @@ export default {
   },
   stateWorkState(state,str) {
     state.workState = str
-  }
+  },
+  stateUserCoordinates(state, payload) {
+    state.userCoordinates.latitude = payload.latitude
+    state.userCoordinates.longitude = payload.longitude
+  },
 }

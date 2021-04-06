@@ -13,5 +13,8 @@ export default {
   },
   workStateData(state) {
     return state.workState
+  },
+  userCoordinatesData(state) {
+    return state.userCoordinates
   }
 }
