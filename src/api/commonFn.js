@@ -1,8 +1,12 @@
 import { useStore } from 'vuex'
-
+import { computed } from 'vue'
 const fn = ()=> {
 
   const store = useStore()
+
+  const userCompanyDistanceData = computed(() => {
+    return store.getters.userCompanyDistanceData
+  })
 
   const getLocation = () => {
     if ('geolocation' in navigator) {                     //測試地理位置定位是否存在
@@ -10,7 +14,7 @@ const fn = ()=> {
         let latitude = pos.coords.latitude
         let longitude = pos.coords.longitude
         store.dispatch('commitUserCoordinates', { latitude, longitude})
-        LatLonDistance(latitude, longitude)
+        store.dispatch('commitCompanyDistance', LatLonDistance(latitude, longitude))
       })
     }
   }
@@ -37,8 +41,8 @@ const fn = ()=> {
       // if (unit=="N") { dist = dist * 0.8684 }
       // console.log(λA,ΦA,'&',λB,ΦB ,'result',dist)
       dist = dist.toFixed(2)
-      // return dist < 1 ? dist * 1000 + '公尺' : dist + '公里'
-      return dist
+      return dist < 1 ? dist * 1000 : dist          //換算公尺
+      // return dist
     }
   }
 
@@ -70,7 +74,6 @@ const fn = ()=> {
     let currentTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
     let dayMilliseconds = todayTime
     store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds })
-
   }
 
   return {

@@ -16,5 +16,11 @@ export default {
   },
   userCoordinatesData(state) {
     return state.userCoordinates
+  },
+  userCompanyDistanceData(state) {
+    return state.companyDistance
+  },
+  clockInStateData(state) {
+    return state.clockInState
   }
 }

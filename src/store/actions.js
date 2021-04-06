@@ -11,10 +11,16 @@ export default {
   commitLastTime({commit}, payload) {
     commit('stateLastTime', payload)
   },
-  commitWorkState({commit},str) {
-    commit('stateWorkState',str)
+  commitWorkState({commit},string) {
+    commit('stateWorkState',string)
   },
   commitUserCoordinates({commit},payload) {
     commit('stateUserCoordinates',payload)
+  },
+  commitCompanyDistance({commit},number) {
+    commit('stateCompanyDistance',number)
+  },
+  commitClockInState({commit},string) {
+    commit('stateClockInState',string)
   }
 }

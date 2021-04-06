@@ -11,4 +11,6 @@ export default {
     latitude: '',
     longitude: ''
   },
+  companyDistance: 0,
+  clockInState: ''
 }

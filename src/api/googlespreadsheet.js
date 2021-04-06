@@ -25,24 +25,35 @@ const handleSheet = ()=> {
     return store.getters.workStateData
   })
 
+  const userCompanyDistanceData = computed(()=> {
+    return store.getters.userCompanyDistanceData
+  })
+
   const timeResult = reactive([])
 
   const sheet = ref()
 
   const sendData = async ()=> {
     await loadSheetData()
-    await getTime()
-    const data = await sheet.value.addRow({               //將資料寫入sheet
-      name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
-      email: loginUserInfoData.value.email,
-      currentdate: currentTimeData.value.currentDate,
-      currenttime: currentTimeData.value.currentTime,
-      lastdate: lastTimeData.value.lastDate,
-      lasttime: lastTimeData.value.lastTime,
-      daymilliseconds: currentTimeData.value.dayMilliseconds,
-      lastdaymilliseconds: lastTimeData.value.lastDayMilliseconds,
-      state: workStateData.value
-    })
+    console.log(userCompanyDistanceData.value)
+    if (userCompanyDistanceData.value < 300) {
+      store.dispatch('commitClockInState', '打卡成功')
+      await getTime()
+      const data = await sheet.value.addRow({               //將資料寫入sheet
+        name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
+        email: loginUserInfoData.value.email,
+        currentdate: currentTimeData.value.currentDate,
+        currenttime: currentTimeData.value.currentTime,
+        lastdate: lastTimeData.value.lastDate,
+        lasttime: lastTimeData.value.lastTime,
+        daymilliseconds: currentTimeData.value.dayMilliseconds,
+        lastdaymilliseconds: lastTimeData.value.lastDayMilliseconds,
+        state: workStateData.value
+      })
+      
+    } else {
+      store.dispatch('commitClockInState','偵測位置不正確，請重新定位')
+    }
   }
 
   const loadSheetData = async () => {

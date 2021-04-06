@@ -28,6 +28,10 @@ export default {
       return store.getters.userCoordinatesData
     })
 
+    const clockInState = computed(()=> {
+      return store.getters.clockInStateData
+    })
+
     const { loadSheetData, sendData } = apiGoogleSpreadSheet()
 
     const { getLocation } = apiCommonFn()
@@ -89,7 +93,9 @@ export default {
       sendData,
       currentTimeData,
       lastTimeData,
-      userCoordinatesData
+      userCoordinatesData,
+      getLocation,
+      clockInState
     }
   }
 
@@ -110,8 +116,8 @@ export default {
       .text-4xl {{currentTimeData.currentDate}} {{currentTimeData.currentTime}}
     .coordinates.pl-4
       .text-2xl 您的位置:
-      .txxt-xl {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
-
+      .text-xl {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
+      .text-xl {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
@@ -127,7 +133,7 @@ export default {
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500(class='w-full h-1/3')
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData(),getLocation()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 

@@ -15,11 +15,17 @@ export default {
     state.stateLastTime.lastTime = payload.lastTime
     state.stateLastTime.lastDayMilliseconds = payload.lastDayMilliseconds
   },
-  stateWorkState(state,str) {
-    state.workState = str
+  stateWorkState(state,string) {
+    state.workState = string
   },
   stateUserCoordinates(state, payload) {
     state.userCoordinates.latitude = payload.latitude
     state.userCoordinates.longitude = payload.longitude
   },
+  stateCompanyDistance(state,number) {
+    state.companyDistance = number
+  },
+  stateClockInState(state,string) {
+    state.clockInState = string
+  }
 }
