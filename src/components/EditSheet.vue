@@ -16,12 +16,12 @@ export default {
       return store.getters.authStateData
     })
 
-    const stateCurrentTimeData = computed(()=> {
-      return store.getters.stateCurrentTimeData
+    const currentTimeData = computed(()=> {
+      return store.getters.currentTimeData
     })
 
-    const stateLastTimeData = computed(()=> {
-      return store.getters.stateLastTimeData
+    const lastTimeData = computed(()=> {
+      return store.getters.lastTimeData
     })
 
     const userCoordinatesData = computed(()=> {
@@ -87,8 +87,8 @@ export default {
       authStateData,
       loadSheetData,
       sendData,
-      stateCurrentTimeData,
-      stateLastTimeData,
+      currentTimeData,
+      lastTimeData,
       userCoordinatesData
     }
   }
@@ -104,10 +104,10 @@ export default {
       .text-xl {{loginUserInfoData.name}}
     .last-time.pl-4
       .text-2xl.mb-2 上次打卡時間: 
-      .text-4xl {{stateLastTimeData.lastDate}} {{stateLastTimeData.lastTime}}
+      .text-4xl {{lastTimeData.lastDate}} {{lastTimeData.lastTime}}
     .current-time.pl-4
       .text-2xl.mb-2 本次打卡時間: 
-      .text-4xl {{stateCurrentTimeData.currentDate}} {{stateCurrentTimeData.currentTime}}
+      .text-4xl {{currentTimeData.currentDate}} {{currentTimeData.currentTime}}
     .coordinates.pl-4
       .text-2xl 您的位置:
       .txxt-xl {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
@@ -145,7 +145,7 @@ export default {
     position absolute
   .info
     padding 1rem
-    border 1px solid #222
+    // border 1px solid #222
     // flexCenter(flex-start,center,column)
     size(80vw,auto)
     posCenter(0%,60%)

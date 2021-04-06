@@ -13,12 +13,12 @@ const handleSheet = ()=> {
     return store.getters.loginUserInfoData
   })
 
-  const stateCurrentTimeData = computed(() => {
-    return store.getters.stateCurrentTimeData
+  const currentTimeData = computed(() => {
+    return store.getters.currentTimeData
   })
 
-  const stateLastTimeData = computed(() => {
-    return store.getters.stateLastTimeData
+  const lastTimeData = computed(() => {
+    return store.getters.lastTimeData
   })
 
   const workStateData = computed(() => {
@@ -35,12 +35,12 @@ const handleSheet = ()=> {
     const data = await sheet.value.addRow({               //將資料寫入sheet
       name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
       email: loginUserInfoData.value.email,
-      currentdate: stateCurrentTimeData.value.currentDate,
-      currenttime: stateCurrentTimeData.value.currentTime,
-      lastdate: stateLastTimeData.value.lastDate,
-      lasttime: stateLastTimeData.value.lastTime,
-      daymilliseconds: stateCurrentTimeData.value.dayMilliseconds,
-      lastdaymilliseconds: stateLastTimeData.value.lastDayMilliseconds,
+      currentdate: currentTimeData.value.currentDate,
+      currenttime: currentTimeData.value.currentTime,
+      lastdate: lastTimeData.value.lastDate,
+      lasttime: lastTimeData.value.lastTime,
+      daymilliseconds: currentTimeData.value.dayMilliseconds,
+      lastdaymilliseconds: lastTimeData.value.lastDayMilliseconds,
       state: workStateData.value
     })
   }
