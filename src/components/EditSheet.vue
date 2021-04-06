@@ -32,6 +32,10 @@ export default {
       return store.getters.clockInStateData
     })
 
+    const workStateData = computed(()=> {
+      return store.getters.workStateData
+    })
+
     const { loadSheetData, sendData } = apiGoogleSpreadSheet()
 
     const { getLocation } = apiCommonFn()
@@ -95,7 +99,8 @@ export default {
       lastTimeData,
       userCoordinatesData,
       getLocation,
-      clockInState
+      clockInState,
+      workStateData
     }
   }
 
@@ -132,7 +137,7 @@ export default {
         label 
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
-    .control.bg-green-500(class='w-full h-1/3')
+    .control.bg-green-500(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
       button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData(),getLocation()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
@@ -154,14 +159,16 @@ export default {
     // border 1px solid #222
     // flexCenter(flex-start,center,column)
     size(80vw,auto)
-    posCenter(0%,60%)
+    posCenter(0%,70%)
 
-    .last-time,.current-time
+    .last-time,.current-time,.coordinates
       margin 2rem 0
       // border 1px solid #222
     .last-time,.current-time
       size(auto,8rem,0px)
       // border 1px solid #222
+    .coordinates
+      size(auto,4rem,0px)
   .punch-in-out
     size(20vw,100vh)
     flexCenter(flex-start,,column)
@@ -186,5 +193,6 @@ export default {
     .control
       button
         outline none
-    //   border 1px solid #222
+      &.bg-darkgreen
+        background-color rgba(6, 95, 70, 1)
 </style>
