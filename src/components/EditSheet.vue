@@ -94,12 +94,12 @@ export default {
   img(:src="loginUserInfoData.picture", alt="是你啦")
   .info.font-semibold.text-white
     .user-name
-      .text-2xl {{loginUserInfoData.name}}
-    .last-time
-      .text-3xl 上次打卡時間: 
+      .text-xl {{loginUserInfoData.name}}
+    .last-time.pl-4
+      .text-2xl.mb-2 上次打卡時間: 
       .text-4xl {{stateLastTimeData.lastDate}} {{stateLastTimeData.lastTime}}
-    .current-time
-      .text-3xl 本次打卡時間: 
+    .current-time.pl-4
+      .text-2xl.mb-2 本次打卡時間: 
       .text-4xl {{stateCurrentTimeData.currentDate}} {{stateCurrentTimeData.currentTime}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
