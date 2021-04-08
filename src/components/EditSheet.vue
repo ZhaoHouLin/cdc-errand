@@ -108,21 +108,24 @@ export default {
 </script>
 
 <template lang='pug'>
-.content.bg-green-700(v-if='authStateData')
+.content.bg-green-700.shadow(v-if='authStateData')
   img(:src="loginUserInfoData.picture", alt="是你啦")
-  .info.font-semibold.text-white
-    .user-name
+  .info.text-white
+    .user-name.font-semibold
       .text-xl {{loginUserInfoData.name}}
     .last-time.pl-4
-      .text-2xl.mb-2 上次打卡時間: 
-      .text-4xl {{lastTimeData.lastDate}} {{lastTimeData.lastTime}}
+      .text-xl.mb-2 
+        i.fas.fa-history  上次打卡時間: 
+      .text-4xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}}
     .current-time.pl-4
-      .text-2xl.mb-2 本次打卡時間: 
-      .text-4xl {{currentTimeData.currentDate}} {{currentTimeData.currentTime}}
+      .text-xl.mb-2  
+        i.fas.fa-clock  本次打卡時間:
+      .text-4xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}}
     .coordinates.pl-4
-      .text-2xl 您的位置:
-      .text-xl {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
-      .text-xl {{clockInState}}
+      .text-xl 
+        i.fas.fa-map-marker-alt  您的位置:
+      .text-xl.text-green-300 {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
+      .text-xl.font-semibold {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
@@ -137,9 +140,9 @@ export default {
         label 
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
-    .control.bg-green-500(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
+    .control.bg-green-500.rounded-br-2xl(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
       button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData(),getLocation()') 打卡
-      button.font-semibold.shadow-md.text-white.bg-indigo-500(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-br-2xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
 </template>
@@ -147,35 +150,28 @@ export default {
 <style lang="stylus">
 @import '../css/style.styl'
 .content
-  size(100%,100vh,0)
+  size(90%,96%,1rem)
   position relative
-  // border 1px solid #222
   img
     width 40%
-    // border-radius 16px
     position absolute
   .info
     padding 1rem
-    // border 1px solid #222
-    // flexCenter(flex-start,center,column)
     size(80vw,auto)
     posCenter(0%,70%)
 
     .last-time,.current-time,.coordinates
       margin 2rem 0
-      // border 1px solid #222
     .last-time,.current-time
       size(auto,8rem,0px)
-      // border 1px solid #222
     .coordinates
       size(auto,4rem,0px)
   .punch-in-out
-    size(20vw,100vh)
+    size(20vw,100%,0)
     flexCenter(flex-start,,column)
     position absolute
     right 0%
     .state
-      background-color rgba(16, 185, 129, 1)
       .on,.off,.out
         input
           display none
@@ -184,15 +180,17 @@ export default {
           size(auto,100%)
         input:checked + .text
           background-color rgba(6, 95, 70, 1)
-          // color white
-          // border-radius 2rem 0 2rem 0
         label
           padding 20px 0
         label .text
           flexCenter()
+      .on .text
+        border-radius 0 1rem 0 0
     .control
       button
         outline none
       &.bg-darkgreen
         background-color rgba(6, 95, 70, 1)
+        border none
+      
 </style>
