@@ -84,12 +84,14 @@ const handleSheet = ()=> {
         timeResult.push({                                     //將登入的使用者時間存起來
           currentDate: row.currentdate,
           currentTime: row.currenttime,
+          workState: row.state,
           dayMilliseconds: row.daymilliseconds
         })
         let lastDate = timeResult[timeResult.length - 1].currentDate
         let lastTime = timeResult[timeResult.length - 1].currentTime
         let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
-        store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds })
+        let lastWorkState = timeResult[timeResult.length - 1].workState
+        store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
       }
     })
 

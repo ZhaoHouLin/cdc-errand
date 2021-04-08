@@ -4,8 +4,8 @@ const fn = ()=> {
 
   const store = useStore()
 
-  const userCompanyDistanceData = computed(() => {
-    return store.getters.userCompanyDistanceData
+  const workStateData = computed(() => {
+    return store.getters.workStateData
   })
 
   const getLocation = () => {
@@ -73,7 +73,9 @@ const fn = ()=> {
     let currentDate = `${today.getFullYear()}/${formatMonth}/${formatDate}`
     let currentTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
     let dayMilliseconds = todayTime
-    store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds })
+
+    let workState = workStateData.value
+    store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds, workState })
   }
 
   return {

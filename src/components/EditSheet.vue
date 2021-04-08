@@ -63,7 +63,7 @@ export default {
         let currentDate = ``
         let currentTime = ``
         let dayMilliseconds = ``
-        store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds })
+        store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds})
         handleAuthState()
       }).catch((error) => {
         // An error happened.
@@ -116,11 +116,11 @@ export default {
     .last-time.pl-4
       .text-xl.mb-2 
         i.fas.fa-history  上次打卡時間: 
-      .text-4xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}}
+      .text-4xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
     .current-time.pl-4
       .text-xl.mb-2  
         i.fas.fa-clock  本次打卡時間:
-      .text-4xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}}
+      .text-4xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
     .coordinates.pl-4
       .text-xl 
         i.fas.fa-map-marker-alt  您的位置:
