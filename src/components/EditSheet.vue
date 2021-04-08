@@ -108,11 +108,11 @@ export default {
 </script>
 
 <template lang='pug'>
-.content.bg-green-700.shadow(v-if='authStateData')
-  img(:src="loginUserInfoData.picture", alt="是你啦")
+.content.bg-green-700.shadow-md(v-if='authStateData')
+  .avatar
+    img.rounded-br-2xl(:src="loginUserInfoData.picture", alt="是你啦")
+    .user-name.font-semibold.text-xl.text-white.ml-4.mt-2 {{loginUserInfoData.name}}
   .info.text-white
-    .user-name.font-semibold
-      .text-xl {{loginUserInfoData.name}}
     .last-time.pl-4
       .text-xl.mb-2 
         i.fas.fa-history  上次打卡時間: 
@@ -152,22 +152,23 @@ export default {
 .content
   size(90%,96%,1rem)
   position relative
-  img
-    width 40%
+  .avatar
     position absolute
+    img
+      width 8rem
   .info
     padding 1rem
-    size(80vw,auto)
-    posCenter(0%,70%)
-
+    size(80%,auto)
+    posCenter(0%,80%)
     .last-time,.current-time,.coordinates
       margin 2rem 0
     .last-time,.current-time
       size(auto,8rem,0px)
     .coordinates
       size(auto,4rem,0px)
+
   .punch-in-out
-    size(20vw,100%,0)
+    size(20%,100%,0)
     flexCenter(flex-start,,column)
     position absolute
     right 0%
@@ -193,4 +194,11 @@ export default {
         background-color rgba(6, 95, 70, 1)
         border none
       
+
+
+@media screen and (min-width 420px)
+  .content
+    size(420px,96%,1rem)
+    .info
+      posCenter(0%,60%)
 </style>
