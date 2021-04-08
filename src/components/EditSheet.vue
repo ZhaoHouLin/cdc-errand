@@ -116,11 +116,11 @@ export default {
     .last-time.pl-4
       .text-xl.mb-2 
         i.fas.fa-history  上次打卡時間: 
-      .text-4xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
+      .text-3xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
     .current-time.pl-4
       .text-xl.mb-2  
         i.fas.fa-clock  本次打卡時間:
-      .text-4xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
+      .text-3xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
     .coordinates.pl-4
       .text-xl 
         i.fas.fa-map-marker-alt  您的位置:
@@ -159,11 +159,11 @@ export default {
   .info
     padding 1rem
     size(80%,auto)
-    posCenter(0%,80%)
+    posCenter(0%,60%)
     .last-time,.current-time,.coordinates
       margin 2rem 0
     .last-time,.current-time
-      size(auto,8rem,0px)
+      size(auto,6rem,0px)
     .coordinates
       size(auto,4rem,0px)
 
@@ -200,5 +200,5 @@ export default {
   .content
     size(420px,96%,1rem)
     .info
-      posCenter(0%,60%)
+      posCenter(0%,50%)
 </style>
