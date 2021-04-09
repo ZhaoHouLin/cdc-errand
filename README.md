@@ -1,4 +1,8 @@
 # cdc-errand
+# 疾管點點名
+
+DEMO網頁: https://zhaohoulin.github.io/cdc-errand/
+
 
 ## Project setup
 ```
