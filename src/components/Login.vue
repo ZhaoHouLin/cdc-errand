@@ -88,7 +88,7 @@ export default {
     div
       img.mx-auto.h-12.w-auto(src='https://www.cdc.gov.tw/Images/logo_1.svg' alt='Workflow')
       h2.my-6.text-center.text-3xl.font-extrabold.text-gray-900
-        | CDC點點名
+        | 疾管點點名
       div
         button.group.relative.w-full.flex.justify-center.py-2.px-4.border.border-transparent.text-sm.font-medium.rounded-md.text-white.bg-green-600(type='submit' class='hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500' @click='googleSignIn')
           span.absolute.left-0.inset-y-0.flex.items-center.pl-3
