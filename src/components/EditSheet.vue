@@ -7,42 +7,34 @@ export default {
   setup() {
 
     const store = useStore()
+    const { loadSheetData, sendData } = apiGoogleSpreadSheet()
+    const { getLocation } = apiCommonFn()
+    const userData = ref()  
 
-    const loginUserInfoData = computed(()=> {
+    const loginUserInfoData = computed(()=> {             //使用者登入資料
       return store.getters.loginUserInfoData
     })
-
-    const authStateData = computed(()=> {
+    const authStateData = computed(()=> {                 //登入狀態
       return store.getters.authStateData
     })
-
-    const currentTimeData = computed(()=> {
+    const currentTimeData = computed(()=> {               //當前打卡時間
       return store.getters.currentTimeData
     })
-
-    const lastTimeData = computed(()=> {
+    const lastTimeData = computed(()=> {                  //上次打卡時間
       return store.getters.lastTimeData
     })
-
-    const userCoordinatesData = computed(()=> {
+    const userCoordinatesData = computed(()=> {           //使用者所在座標
       return store.getters.userCoordinatesData
     })
-
-    const clockInState = computed(()=> {
+    const clockInState = computed(()=> {                  //是否打卡成功
       return store.getters.clockInStateData
     })
-
-    const workStateData = computed(()=> {
+    const workStateData = computed(()=> {                 //上班、下班、公出狀態
       return store.getters.workStateData
     })
 
-    const { loadSheetData, sendData } = apiGoogleSpreadSheet()
-
-    const { getLocation } = apiCommonFn()
-
-    const userData = ref()                  
-
-    const handleWorkstate = (e)=> {
+            
+    const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
       store.dispatch('commitWorkState',e.target.value)
     }
 
@@ -89,7 +81,6 @@ export default {
     })
 
     return {
-      // getTime,
       handleSignOut,
       handleWorkstate,
       loginUserInfoData,

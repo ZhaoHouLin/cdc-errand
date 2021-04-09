@@ -1,33 +1,33 @@
 export default {
-  stateLoginUserInfo(state,payload) {
+  stateLoginUserInfo(state, payload) {                //使用者登入資料
     state.loginUserInfo = payload
   },
-  stateAuthState(state,boolean) {
+  stateAuthState(state, boolean) {                    //登入狀態
     state.authState = boolean
   },
-  stateCurrentTime(state,payload) {
+  stateCurrentTime(state, payload) {                  //當前打卡時間
     state.stateCurrentTime.currentDate = payload.currentDate
     state.stateCurrentTime.currentTime = payload.currentTime
     state.stateCurrentTime.dayMilliseconds = payload.dayMilliseconds
     state.stateCurrentTime.currentWorkState = payload.workState
   },
-  stateLastTime(state, payload) {
+  stateLastTime(state, payload) {                     //上次打卡時間
     state.stateLastTime.lastDate = payload.lastDate
     state.stateLastTime.lastTime = payload.lastTime
     state.stateLastTime.lastDayMilliseconds = payload.lastDayMilliseconds
     state.stateLastTime.lastWorkState = payload.lastWorkState
   },
-  stateWorkState(state,string) {
+  stateWorkState(state, string) {                     //上班、下班、公出狀態
     state.workState = string
   },
-  stateUserCoordinates(state, payload) {
+  stateUserCoordinates(state, payload) {              //使用者所在座標
     state.userCoordinates.latitude = payload.latitude
     state.userCoordinates.longitude = payload.longitude
   },
-  stateCompanyDistance(state,number) {
+  stateCompanyDistance(state, number) {               //與公司的距離
     state.companyDistance = number
   },
-  stateClockInState(state,string) {
+  stateClockInState(state, string) {                 //是否打卡成功
     state.clockInState = string
   }
 }

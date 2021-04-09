@@ -40,7 +40,7 @@ const handleSheet = ()=> {
       store.dispatch('commitClockInState', '打卡成功')
       await getTime()
       const data = await sheet.value.addRow({               //將資料寫入sheet
-        name: loginUserInfoData.value.name,               //會根據key(第一列title)值寫入value
+        name: loginUserInfoData.value.name,                 //會根據key(第一列title)值寫入value
         email: loginUserInfoData.value.email,
         currentdate: currentTimeData.value.currentDate,
         currenttime: currentTimeData.value.currentTime,
@@ -56,7 +56,7 @@ const handleSheet = ()=> {
     }
   }
 
-  const loadSheetData = async () => {
+  const loadSheetData = async () => {                          //Google spread sheet
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
     //google-spreadsheet-API函式
     // await getTime()
@@ -75,9 +75,9 @@ const handleSheet = ()=> {
     
     // await sheet.value.loadCells('A1:E10')
     // const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
-    // const cellC3 = sheet.value.getCellByA1('C3')           //取得c3的值的方式
+    // const cellC3 = sheet.value.getCellByA1('C3')             //取得c3的值的方式
   
-    const rows = await sheet.value.getRows()
+    const rows = await sheet.value.getRows()                  //取得欄
   
     await rows.forEach(row => {                               //處理使用者時間資料
       if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
@@ -87,7 +87,8 @@ const handleSheet = ()=> {
           workState: row.state,
           dayMilliseconds: row.daymilliseconds
         })
-        let lastDate = timeResult[timeResult.length - 1].currentDate
+        //存最後一筆資料來呈現上次的打卡紀錄
+        let lastDate = timeResult[timeResult.length - 1].currentDate    
         let lastTime = timeResult[timeResult.length - 1].currentTime
         let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
         let lastWorkState = timeResult[timeResult.length - 1].workState
@@ -95,8 +96,6 @@ const handleSheet = ()=> {
       }
     })
 
-    // // let accumulatedHours = (time.dayMilliseconds-time.lastDayMilliseconds)/1000/60/60
-    // // console.log('accumulatedHours',accumulatedHours)
   }
 
   return {

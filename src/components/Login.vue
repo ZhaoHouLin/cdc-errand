@@ -7,20 +7,17 @@ export default {
   setup() {
 
     const store = useStore()
+    const { loadSheetData } = apiGoogleSpreadSheet()
+
+    let userEmail = ref('')
+    let userPassword = ref('')
+    let errorMsg = ref('')
+    const userData = ref()
     
     const authStateData = computed(()=> {
       return store.getters.authStateData
     })
 
-    const { loadSheetData } = apiGoogleSpreadSheet()
-
-    let cover = ref()
-    let userEmail = ref('')
-    let userPassword = ref('')
-
-    let errorMsg = ref('')
-
-    const userData = ref()
 
     const handleAuthState = ()=> {                        //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
@@ -32,7 +29,7 @@ export default {
       })
     }
 
-    const googleSignIn = ()=> {                           //以google登入
+    const googleSignIn = ()=> {                                       //以Google登入
       handleSignOut()
       let provider = new googleFirebase.auth.GoogleAuthProvider()
       googleFirebase.auth().languageCode = 'it';
@@ -43,10 +40,10 @@ export default {
         .signInWithPopup(provider)
         .then((result) => {
           /** @type {firebase.auth.OAuthCredential} */
-          userData.value = googleFirebase.auth().currentUser
-          store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile)
-          handleAuthState()
-          loadSheetData()
+          userData.value = googleFirebase.auth().currentUser          //存放登入資料
+          store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile) //存放vuex
+          handleAuthState()                                           //處理登入狀態
+          loadSheetData()                                             //存取sheet資料
         })
         .catch((error) => {
           // Handle Errors here.
@@ -75,7 +72,6 @@ export default {
       googleSignIn,
       handleSignOut,
       authStateData,
-      cover,
       errorMsg,
     }
   }
