@@ -64,6 +64,7 @@ export default {
         let currentTime = ``
         let dayMilliseconds = ``
         store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds})
+        store.dispatch('commitClockInState', '')
         handleAuthState()
       }).catch((error) => {
         // An error happened.
