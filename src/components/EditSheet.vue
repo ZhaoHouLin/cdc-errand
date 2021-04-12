@@ -95,16 +95,22 @@ export default {
     .last-time.pl-4
       .text-xl.mb-2 
         i.fas.fa-history  上次打卡時間: 
-      .text-3xl.text-green-300 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
+      .time  
+        .bar.ml-2
+        .text-3xl.text-green-300.ml-6 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
     .current-time.pl-4
       .text-xl.mb-2  
         i.fas.fa-clock  本次打卡時間:
-      .text-3xl.text-green-300 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
+      .time
+        .bar.ml-2
+        .text-3xl.text-green-300.ml-6 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
     .coordinates.pl-4
-      .text-xl 
-        i.fas.fa-map-marker-alt  您的位置:
-      .text-xl.text-green-300 {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
-      .text-xl.font-semibold {{clockInState}}
+      .text-xl.mb-2
+        i.fas.fa-street-view  您的位置:
+      .pos
+        .bar.ml-2
+        .text-xl.text-green-300.ml-4 {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
+      .text-xl.font-semibold.ml-6 {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
@@ -139,12 +145,30 @@ export default {
     padding 1rem
     size(80%,auto)
     posCenter(0%,60%)
+     
     .last-time,.current-time,.coordinates
-      margin 2rem 0
+      margin 2.5rem 0
     .last-time,.current-time
       size(auto,6rem,0px)
+
+          
+    .last-time,.current-time 
+      .time
+        flexCenter(flex-start,center,)
+        .bar
+          size(4px,5rem)
+          background-color #fff
+          position absolute
+        .text-3xl.text-green-300
+          size(260px,72px)
+
     .coordinates
       size(auto,4rem,0px)
+      .pos
+        flexCenter(flex-start,center,)
+        .bar
+          size(4px,2rem)
+          background-color #fff
 
   .punch-in-out
     size(20%,100%,0)
