@@ -14,7 +14,8 @@ const fn = ()=> {
         let latitude = pos.coords.latitude
         let longitude = pos.coords.longitude
         store.dispatch('commitUserCoordinates', { latitude, longitude})
-        store.dispatch('commitCompanyDistance', LatLonDistance(latitude, longitude))
+        // store.dispatch('commitCompanyDistance', LatLonDistance(latitude, longitude))
+        LatLonDistance(latitude, longitude)
       })
     }
   }
@@ -22,6 +23,7 @@ const fn = ()=> {
   const LatLonDistance = (λA, ΦA) => {   //計算經緯度距離
     let λB = 25.043293
     let ΦB = 121.5205653
+    console.log(λA, ΦA);
     if ((λA == λB) && (ΦA == ΦB)) {
       return 0;
     }
@@ -40,9 +42,8 @@ const fn = ()=> {
       dist = dist * 1.609344
       // if (unit=="N") { dist = dist * 0.8684 }
       // console.log(λA,ΦA,'&',λB,ΦB ,'result',dist)
-      dist = dist.toFixed(2)
-      return dist < 1 ? dist * 1000 : dist          //換算公尺
-      // return dist
+      dist = dist.toFixed(2) * 1000                       //換算公尺
+      store.dispatch('commitCompanyDistance', dist)
     }
   }
 

@@ -35,7 +35,6 @@ const handleSheet = ()=> {
 
   const sendData = async ()=> {
     await loadSheetData()
-    console.log(userCompanyDistanceData.value)
     if (userCompanyDistanceData.value <= 300) {
       store.dispatch('commitClockInState', '打卡成功')
       await getTime()
