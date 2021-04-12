@@ -63,19 +63,6 @@ export default {
       });
     }
 
-    // const getData = async (docID,sheetID,credentialsPath = './credentials.json')=> {
-    //   const timeResult = [];
-    //   const doc = new GoogleSpreadsheet(docID);
-    //   const creds = require(credentialsPath);
-    //   await doc.useServiceAccountAuth(creds);
-    //   await doc.loadInfo();
-    //   const sheet = doc.sheetsById[sheetID];
-    //   const rows = await sheet.getRows();
-    //   for (row of rows) {
-    //     result.push(row._rawData);
-    //   }
-    // }
-
     onMounted(()=> {
       getLocation()
     })

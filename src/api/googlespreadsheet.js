@@ -2,7 +2,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { apiCommonFn } from './index'
-
+import creds from '../../credentials.json'
 const handleSheet = ()=> {
 
   const { getTime } = apiCommonFn()
@@ -55,6 +55,37 @@ const handleSheet = ()=> {
       store.dispatch('commitClockInState','偵測位置不正確，請重新定位')
     }
   }
+
+  //將金鑰獨立出json檔
+  // const loadSheetData = async (docID = '1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY', sheetID = '0')=> {
+    
+  //   const doc = new GoogleSpreadsheet(docID);
+  //   // const creds = require(credentialsPath);
+  //   await doc.useServiceAccountAuth(creds);
+  //   await doc.loadInfo();
+
+  //   // sheet.value = doc.sheetsByIndex[0]
+  //   sheet.value = doc.sheetsById[sheetID]     //ID = google excel網址的gid
+
+  //   const rows = await sheet.value.getRows()
+
+  //   await rows.forEach(row => {                               //處理使用者時間資料
+  //     if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
+  //       timeResult.push({                                     //將登入的使用者時間存起來
+  //         currentDate: row.currentdate,
+  //         currentTime: row.currenttime,
+  //         workState: row.state,
+  //         dayMilliseconds: row.daymilliseconds
+  //       })
+  //       //存最後一筆資料來呈現上次的打卡紀錄
+  //       let lastDate = timeResult[timeResult.length - 1].currentDate
+  //       let lastTime = timeResult[timeResult.length - 1].currentTime
+  //       let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
+  //       let lastWorkState = timeResult[timeResult.length - 1].workState
+  //       store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
+  //     }
+  //   })
+  // }
 
   const loadSheetData = async () => {                          //Google spread sheet
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')

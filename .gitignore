@@ -2,6 +2,7 @@
 node_modules
 /dist
 deploy.sh
+credentials.json
 
 # local env files
 .env.local
