@@ -36,10 +36,13 @@ export default {
 
     const timeData = ref({
       '上班': {
+        time: '防資料覆寫'
       },
       '下班': {
+        time: '防資料覆寫'
       },
       '公出': {
+        time: '防資料覆寫'
       },
     })
 
