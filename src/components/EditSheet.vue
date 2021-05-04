@@ -36,13 +36,10 @@ export default {
 
     const timeData = ref({
       '上班': {
-        time: null
       },
       '下班': {
-        time: null
       },
       '公出': {
-        time: null
       },
     })
 
