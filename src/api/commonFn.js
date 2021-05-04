@@ -71,7 +71,7 @@ const fn = ()=> {
     let formatSeconds = formatTime(today.getSeconds())
     let formatMonth = formatTime(today.getMonth() + 1)
     let formatDate = formatTime(today.getDate())
-    let currentDate = `${today.getFullYear()}/${formatMonth}/${formatDate}`
+    let currentDate = `${today.getFullYear()}-${formatMonth}-${formatDate}`
     let currentTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
     let dayMilliseconds = todayTime
 

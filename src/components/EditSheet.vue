@@ -3,12 +3,13 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFireStore , googleFirebase } from '../db'
 import { useStore } from 'vuex'
 import { apiGoogleSpreadSheet, apiCommonFn } from '../api'
+
 export default {
   setup() {
 
     const store = useStore()
     const { loadSheetData, sendData } = apiGoogleSpreadSheet()
-    const { getLocation } = apiCommonFn()
+    const { getLocation , getTime } = apiCommonFn()
     const userData = ref()  
 
     const loginUserInfoData = computed(()=> {             //使用者登入資料
@@ -31,6 +32,9 @@ export default {
     })
     const workStateData = computed(()=> {                 //上班、下班、公出狀態
       return store.getters.workStateData
+    })
+
+    const timeData = ref({
     })
 
             
@@ -63,6 +67,28 @@ export default {
       });
     }
 
+    const fsSet = ()=> {
+      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(currentTimeData.value.currentDate)
+      timeData.value[currentTimeData.value.currentTime] = workStateData.value
+      ref.set(timeData.value,{merge: true}).then(() => {
+        console.log('set data successful')
+      })
+    }
+
+    const fsUpdate = ()=> {
+      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(currentTimeData.value.currentDate)
+      timeData.value[currentTimeData.value.currentTime] = workStateData.value
+      ref.update(timeData.value).then(() => {
+        console.log('update data successful')
+      })
+    }
+
+    const fsSendData = ()=> {
+      const ref = googleFireStore.collection(loginUserInfoData.value.name)
+      getTime()
+      fsSet()
+    }
+
     onMounted(()=> {
       getLocation()
     })
@@ -79,7 +105,8 @@ export default {
       userCoordinatesData,
       getLocation,
       clockInState,
-      workStateData
+      workStateData,
+      fsSendData
     }
   }
 
@@ -126,7 +153,7 @@ export default {
           input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500.rounded-br-2xl(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='sendData(),getLocation()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='fsSendData(),getLocation()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-br-2xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
