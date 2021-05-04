@@ -35,6 +35,15 @@ export default {
     })
 
     const timeData = ref({
+      '上班': {
+        time: null
+      },
+      '下班': {
+        time: null
+      },
+      '公出': {
+        time: null
+      },
     })
 
             
@@ -69,7 +78,7 @@ export default {
 
     const fsSet = ()=> {
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(currentTimeData.value.currentDate)
-      timeData.value[currentTimeData.value.currentTime] = workStateData.value
+      timeData.value[workStateData.value][currentTimeData.value.currentTime] = currentTimeData.value.currentTime
       ref.set(timeData.value,{merge: true}).then(() => {
         console.log('set data successful')
       })
@@ -83,10 +92,22 @@ export default {
       })
     }
 
-    const fsSendData = ()=> {
+    const fsLoadData = ()=> {
       const ref = googleFireStore.collection(loginUserInfoData.value.name)
+      ref.get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          // console.log(doc.id, doc.data())
+          for(let item in doc.data()) {
+            console.log(item,doc.data()[item]);
+          }
+        })
+      })
+    }
+
+    const fsSendData = ()=> {
       getTime()
       fsSet()
+      // fsLoadData()
     }
 
     onMounted(()=> {
@@ -98,8 +119,8 @@ export default {
       handleWorkstate,
       loginUserInfoData,
       authStateData,
-      loadSheetData,
-      sendData,
+      // loadSheetData,
+      // sendData,
       currentTimeData,
       lastTimeData,
       userCoordinatesData,

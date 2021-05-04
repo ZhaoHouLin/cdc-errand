@@ -14,9 +14,22 @@ export default {
     let errorMsg = ref('')
     const userData = ref()
     
+    const loginUserInfoData = computed(()=> {             //使用者登入資料
+      return store.getters.loginUserInfoData
+    })
+
     const authStateData = computed(()=> {
       return store.getters.authStateData
     })
+
+    const fsLoadData = ()=> {
+      const ref = googleFireStore.collection(loginUserInfoData.value.name)
+      ref.get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.log(doc.id, doc.data())
+        })
+      })
+    }
 
 
     const handleAuthState = ()=> {                        //判斷登入狀態
@@ -43,7 +56,8 @@ export default {
           userData.value = googleFirebase.auth().currentUser          //存放登入資料
           store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile) //存放vuex
           handleAuthState()                                           //處理登入狀態
-          loadSheetData()                                             //存取sheet資料
+          // loadSheetData()   
+          fsLoadData()                                          //存取sheet資料
         })
         .catch((error) => {
           // Handle Errors here.
