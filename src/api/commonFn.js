@@ -79,10 +79,23 @@ const fn = ()=> {
     store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds, workState })
   }
 
+  const convertMilliseconds = (milliseconds)=> {
+    let millisecondsDate = new Date(milliseconds)                      
+    let formatHours = formatTime(millisecondsDate.getHours())
+    let formatMinutes = formatTime(millisecondsDate.getMinutes())
+    let formatSeconds = formatTime(millisecondsDate.getSeconds())
+    let formatMonth = formatTime(millisecondsDate.getMonth() + 1)
+    let formatDate = formatTime(millisecondsDate.getDate())
+    let resultDate = `${millisecondsDate.getFullYear()}-${formatMonth}-${formatDate}`
+    let resultTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
+    return {resultDate,resultTime}
+  }
+
   return {
     getLocation,
     formatTime,
-    getTime
+    getTime,
+    convertMilliseconds
   }
 
 }

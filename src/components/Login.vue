@@ -26,7 +26,7 @@ export default {
       const ref = googleFireStore.collection(loginUserInfoData.value.name)
       ref.get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          console.log(doc.id, doc.data())
+          // console.log(doc.id, doc.data())
         })
       })
     }
