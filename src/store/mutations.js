@@ -12,10 +12,10 @@ export default {
     state.stateCurrentTime.currentWorkState = payload.workState
   },
   stateLastTime(state, payload) {                     //上次打卡時間
-    state.stateLastTime.lastDate = payload.lastDate
-    state.stateLastTime.lastTime = payload.lastTime
-    state.stateLastTime.lastDayMilliseconds = payload.lastDayMilliseconds
-    state.stateLastTime.lastWorkState = payload.lastWorkState
+    state.stateLastTime.lastDate = payload.onWorkTime.resultDate
+    state.stateLastTime.lastTime = payload.onWorkTime.resultTime
+    state.stateLastTime.lastDayMilliseconds = payload.ms
+    state.stateLastTime.lastWorkState = '上班'
   },
   stateWorkState(state, string) {                     //上班、下班、公出狀態
     state.workState = string

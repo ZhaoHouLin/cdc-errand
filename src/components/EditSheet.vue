@@ -8,8 +8,7 @@ export default {
   setup() {
 
     const store = useStore()
-    const { loadSheetData, sendData } = apiGoogleSpreadSheet()
-    const { getLocation, getTime, convertMilliseconds } = apiCommonFn()
+    const { getLocation, getTime } = apiCommonFn()
     const userData = ref()  
 
     const loginUserInfoData = computed(()=> {             //使用者登入資料
@@ -92,31 +91,10 @@ export default {
       })
     }
 
-    const data = ref([])
-    const fsLoadData = async ()=> {
-      const ref = googleFireStore.collection(loginUserInfoData.value.name)
-      await ref.get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          data.value = []
-          for(let item in doc.data()['上班']) {
-            if(doc.data()['上班'][item] !== '防資料覆寫') {
-              data.value.push(doc.data()['上班'][item])
-            }
-          }
-        })
-      })
-      const sortArr = data.value.sort((a,b)=> {       //排序上班時間(由最早到最晚)
-        return a - b
-      })
-      
-      console.log(sortArr);
-      console.log('ms',convertMilliseconds(sortArr[0]))
-    }
-
     const fsSendData = ()=> {
       getTime()
-      // fsSet()
-      fsLoadData()
+      fsSet()
+      // fsLoadData()
     }
 
     onMounted(()=> {

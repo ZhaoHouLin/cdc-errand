@@ -8,7 +8,7 @@ export default {
 
     const store = useStore()
     const { loadSheetData } = apiGoogleSpreadSheet()
-    const { getLocation } = apiCommonFn()
+    const { getLocation, convertMilliseconds } = apiCommonFn()
     let userEmail = ref('')
     let userPassword = ref('')
     let errorMsg = ref('')
@@ -22,15 +22,30 @@ export default {
       return store.getters.authStateData
     })
 
-    const fsLoadData = ()=> {
-      const ref = googleFireStore.collection(loginUserInfoData.value.name)
-      ref.get().then(querySnapshot => {
+    
+    const fsLoadData = async ()=> {                       //從firestore讀取資料
+      let data = []
+      const ref = googleFireStore.collection(loginUserInfoData.value.name)    //定義讀取的資料欄位
+      await ref.get().then(querySnapshot => {             //遍歷使用者所有日期資料
         querySnapshot.forEach(doc => {
-          // console.log(doc.id, doc.data())
+          data = []
+          for(let item in doc.data()['上班']) {
+            if(doc.data()['上班'][item] !== '防資料覆寫') {
+              data.push(doc.data()['上班'][item])
+            }
+          }
         })
       })
+      const sortArr = data.sort((a,b)=> {               //排序上班時間(由最早到最晚)
+        return a - b
+      })
+      
+      console.log(sortArr);
+      // console.log('ms',convertMilliseconds(sortArr[0]))
+      let ms = sortArr[0]
+      let onWorkTime = convertMilliseconds(ms)
+      store.dispatch('commitLastTime', {onWorkTime,ms})
     }
-
 
     const handleAuthState = ()=> {                        //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
@@ -57,7 +72,7 @@ export default {
           store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile) //存放vuex
           handleAuthState()                                           //處理登入狀態
           // loadSheetData()   
-          fsLoadData()                                          //存取sheet資料
+          // fsLoadData()                                          //存取sheet資料
         })
         .catch((error) => {
           // Handle Errors here.
@@ -87,12 +102,14 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
+      fsLoadData
     }
   }
 }
 </script>
 
 <template lang='pug'>
+button(@click='fsLoadData') test
 .min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div
