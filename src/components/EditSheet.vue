@@ -64,10 +64,12 @@ export default {
       googleFirebase.auth().signOut().then(() => {
         console.log('Sign-out successful.');
         userData.value = googleFirebase.auth().currentUser
-        let currentDate = ``
-        let currentTime = ``
-        let dayMilliseconds = ``
-        store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds})
+        let getTimeData = {
+          currentDate: ``,
+          currentTime: ``,
+          dayMilliseconds: ``
+        }
+        store.dispatch('commitCurrentTime', { getTimeData })
         store.dispatch('commitClockInState', '')
         handleAuthState()
       }).catch((error) => {
@@ -76,25 +78,18 @@ export default {
     }
 
     const fsSet = ()=> {
-      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(currentTimeData.value.currentDate)
-      timeData.value[workStateData.value][currentTimeData.value.currentTime] = currentTimeData.value.dayMilliseconds
+      let getTimeData = getTime()
+      let workState = workStateData.value
+      store.dispatch('commitCurrentTime', { getTimeData, workState })
+      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
+      timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
       ref.set(timeData.value,{merge: true}).then(() => {
         console.log('set data successful')
       })
     }
 
-    const fsUpdate = ()=> {
-      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(currentTimeData.value.currentDate)
-      timeData.value[currentTimeData.value.currentTime] = workStateData.value
-      ref.update(timeData.value).then(() => {
-        console.log('update data successful')
-      })
-    }
-
     const fsSendData = ()=> {
-      getTime()
       fsSet()
-      // fsLoadData()
     }
 
     onMounted(()=> {

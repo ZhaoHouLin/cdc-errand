@@ -6,9 +6,9 @@ export default {
     state.authState = boolean
   },
   stateCurrentTime(state, payload) {                  //當前打卡時間
-    state.stateCurrentTime.currentDate = payload.currentDate
-    state.stateCurrentTime.currentTime = payload.currentTime
-    state.stateCurrentTime.dayMilliseconds = payload.dayMilliseconds
+    state.stateCurrentTime.currentDate = payload.getTimeData.currentDate
+    state.stateCurrentTime.currentTime = payload.getTimeData.currentTime
+    state.stateCurrentTime.dayMilliseconds = payload.getTimeData.dayMilliseconds
     state.stateCurrentTime.currentWorkState = payload.workState
   },
   stateLastTime(state, payload) {                     //上次打卡時間

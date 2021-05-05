@@ -75,8 +75,12 @@ const fn = ()=> {
     let currentTime = `${formatHours}:${formatMinutes}:${formatSeconds}`
     let dayMilliseconds = todayTime
 
-    let workState = workStateData.value
-    store.dispatch('commitCurrentTime', { currentDate, currentTime, dayMilliseconds, workState })
+    return {
+      currentDate,
+      currentTime,
+      dayMilliseconds
+    }
+
   }
 
   const convertMilliseconds = (milliseconds)=> {
