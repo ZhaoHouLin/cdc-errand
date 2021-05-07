@@ -122,7 +122,7 @@ const handleSheet = ()=> {
         let lastTime = timeResult[timeResult.length - 1].currentTime
         let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
         let lastWorkState = timeResult[timeResult.length - 1].workState
-        store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
+        store.dispatch('commitClockIn', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
       }
     })
 

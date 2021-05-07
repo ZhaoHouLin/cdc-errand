@@ -5,11 +5,11 @@ export default {
   commitAuthState({commit},boolean) {             //登入狀態
     commit('stateAuthState',boolean)
   },
-  commitCurrentTime({commit},payload) {           //當前打卡時間
-    commit('stateCurrentTime',payload)
+  commitClockOut({commit},payload) {              //下班打卡時間
+    commit('stateClockOut',payload)
   },
-  commitLastTime({commit}, payload) {             //上次打卡時間
-    commit('stateLastTime', payload)
+  commitClockIn({commit}, payload) {              //上班打卡時間
+    commit('stateClockIn', payload)
   },
   commitWorkState({commit},string) {              //上班、下班、公出狀態
     commit('stateWorkState',string)

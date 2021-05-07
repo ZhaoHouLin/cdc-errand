@@ -40,7 +40,7 @@ export default {
           })
           let ms = sortArr[0]
           let onWorkTime = convertMilliseconds(ms)
-          store.dispatch('commitLastTime', {onWorkTime,ms})
+          store.dispatch('commitClockIn', {onWorkTime,ms})
         } else {
           console.log('no');
         }

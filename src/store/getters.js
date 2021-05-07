@@ -5,11 +5,11 @@ export default {
   authStateData(state) {                      //登入狀態
     return state.authState
   },
-  currentTimeData(state) {                    //當前打卡時間
-    return state.stateCurrentTime
+  clockOutData(state) {                       //下班打卡時間
+    return state.clockOut
   },
-  lastTimeData(state) {                       //上次打卡時間
-    return state.stateLastTime
+  clockInData(state) {                        //上班打卡時間
+    return state.clockIn
   },
   workStateData(state) {                      //上班、下班、公出狀態
     return state.workState

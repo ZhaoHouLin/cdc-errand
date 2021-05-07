@@ -5,17 +5,17 @@ export default {
   stateAuthState(state, boolean) {                    //登入狀態
     state.authState = boolean
   },
-  stateCurrentTime(state, payload) {                  //當前打卡時間
-    state.stateCurrentTime.currentDate = payload.getTimeData.currentDate
-    state.stateCurrentTime.currentTime = payload.getTimeData.currentTime
-    state.stateCurrentTime.dayMilliseconds = payload.getTimeData.dayMilliseconds
-    state.stateCurrentTime.currentWorkState = payload.workState
+  stateClockOut(state, payload) {                     //下班打卡時間
+    state.clockOut.currentDate = payload.getTimeData.currentDate
+    state.clockOut.currentTime = payload.getTimeData.currentTime
+    state.clockOut.dayMilliseconds = payload.getTimeData.dayMilliseconds
+    state.clockOut.currentWorkState = payload.workState
   },
-  stateLastTime(state, payload) {                     //上次打卡時間
-    state.stateLastTime.lastDate = payload.onWorkTime.resultDate
-    state.stateLastTime.lastTime = payload.onWorkTime.resultTime
-    state.stateLastTime.lastDayMilliseconds = payload.ms
-    state.stateLastTime.lastWorkState = '上班'
+  stateClockIn(state, payload) {                     //上班打卡時間
+    state.clockIn.lastDate = payload.onWorkTime.resultDate
+    state.clockIn.lastTime = payload.onWorkTime.resultTime
+    state.clockIn.lastDayMilliseconds = payload.ms
+    state.clockIn.lastWorkState = '上班'
   },
   stateWorkState(state, string) {                     //上班、下班、公出狀態
     state.workState = string

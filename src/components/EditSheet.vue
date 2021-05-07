@@ -17,11 +17,11 @@ export default {
     const authStateData = computed(()=> {                 //登入狀態
       return store.getters.authStateData
     })
-    const currentTimeData = computed(()=> {               //當前打卡時間
-      return store.getters.currentTimeData
+    const clockOutData = computed(()=> {                  //下班打卡時間
+      return store.getters.clockOutData
     })
-    const lastTimeData = computed(()=> {                  //上次打卡時間
-      return store.getters.lastTimeData
+    const clockInData = computed(()=> {                   //上班打卡時間
+      return store.getters.clockInData
     })
     const userCoordinatesData = computed(()=> {           //使用者所在座標
       return store.getters.userCoordinatesData
@@ -70,7 +70,7 @@ export default {
           currentTime: ``,
           dayMilliseconds: ``
         }
-        store.dispatch('commitCurrentTime', { getTimeData })
+        store.dispatch('commitClockOut', { getTimeData })
         store.dispatch('commitClockInState', '')
         handleAuthState()
       }).catch((error) => {
@@ -98,7 +98,7 @@ export default {
       console.log(workState);
 
       let workState = workStateData.value
-      store.dispatch('commitCurrentTime', { getTimeData, workState })
+      store.dispatch('commitClockOut', { getTimeData, workState })
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
       timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
       ref.set(timeData.value,{merge: true}).then(() => {
@@ -119,10 +119,8 @@ export default {
       handleWorkstate,
       loginUserInfoData,
       authStateData,
-      // loadSheetData,
-      // sendData,
-      currentTimeData,
-      lastTimeData,
+      clockOutData,
+      clockInData,
       userCoordinatesData,
       getLocation,
       clockInState,
@@ -142,16 +140,16 @@ export default {
   .info.text-white
     .last-time.pl-4
       .text-xl.mb-2 
-        i.fas.fa-history  上次打卡時間: 
+        i.fas.fa-history  今日上班打卡時間: 
       .time  
         .bar.ml-2
-        .text-3xl.text-green-300.ml-6 {{lastTimeData.lastDate}} {{lastTimeData.lastTime}} {{lastTimeData.lastWorkState}}
+        .text-3xl.text-green-300.ml-6 {{clockInData.lastDate}} {{clockInData.lastTime}} {{clockInData.lastWorkState}}
     .current-time.pl-4
       .text-xl.mb-2  
-        i.fas.fa-clock  本次打卡時間:
+        i.fas.fa-clock  今日下班打卡時間:
       .time
         .bar.ml-2
-        .text-3xl.text-green-300.ml-6 {{currentTimeData.currentDate}} {{currentTimeData.currentTime}} {{currentTimeData.currentWorkState}}
+        .text-3xl.text-green-300.ml-6 {{clockOutData.currentDate}} {{clockOutData.currentTime}} {{clockOutData.currentWorkState}}
     .coordinates.pl-4
       .text-xl.mb-2
         i.fas.fa-street-view  您的位置:
