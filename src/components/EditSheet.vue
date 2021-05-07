@@ -47,6 +47,7 @@ export default {
 
             
     const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
+
       store.dispatch('commitWorkState',e.target.value)
     }
 
@@ -79,6 +80,23 @@ export default {
 
     const fsSet = ()=> {
       let getTimeData = getTime()
+      // let workState 
+      // const workStateData = googleFireStore.collection(loginUserInfoData.value.name)
+
+      // workStateData.get().then(querySnapshot => {
+      //   querySnapshot.forEach(doc => {
+      //     if(doc.data()['上班'].length > 0) {
+      //       workState = '下班'
+      //     }
+      //     // for(let item in doc.data()['上班']) {
+      //     //   if(doc.data()['上班'][item] !== '防資料覆寫') {
+      //     //     data.push(doc.data()['上班'][item])
+      //     //   }
+      //     // }
+      //   })
+      // })
+      console.log(workState);
+
       let workState = workStateData.value
       store.dispatch('commitCurrentTime', { getTimeData, workState })
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
