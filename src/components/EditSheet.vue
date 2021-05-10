@@ -35,6 +35,9 @@ export default {
     const docExistData = computed(()=> {                  //日期資料是否存在
       return store.getters.docExistData
     })
+    const userCompanyDistanceData = computed(()=> {
+      return store.getters.userCompanyDistanceData
+    })
 
     const timeData = ref({
       '上班': {
@@ -84,19 +87,23 @@ export default {
     const fsSet = (state)=> {
       let getTimeData = getTime()
       let workState
-  
+      console.log(userCompanyDistanceData.value);
       docExistData.value?workState = state :workState = '上班'
 
-      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
-
-      timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
-
-      ref.set(timeData.value,{merge: true}).then(() => {              //傳到firestore
-
-        if(workState == state) {
-          store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
-        } 
-      })
+      if(userCompanyDistanceData.value < 300 ) {        //判斷距離公司300公尺內才能打卡
+        const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
+  
+        timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
+  
+        ref.set(timeData.value,{merge: true}).then(() => {              //傳到firestore
+          if(workState == state) {
+            store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
+          } 
+          store.dispatch('commitClockInState', '打卡成功')
+        })
+      } else {
+        store.dispatch('commitClockInState', '失敗')
+      }
     }
 
     onMounted(()=> {
