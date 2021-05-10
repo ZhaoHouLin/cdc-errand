@@ -42,11 +42,16 @@ export default {
       },
       '下班': {
         time: '防資料覆寫'
+      },
+      '公出': {
+        time: '防資料覆寫'
       }
     })
   
     const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
+      console.log(e.target.value);
       store.dispatch('commitWorkState',e.target.value)
+      console.log(workStateData.value);
     }
 
     const handleAuthState = ()=> {                        //處理登入狀態後的頁面
@@ -76,24 +81,22 @@ export default {
       });
     }
 
-    const fsSet = ()=> {
+    const fsSet = (state)=> {
       let getTimeData = getTime()
       let workState
   
-      docExistData.value?workState = '下班':workState = '上班'
+      docExistData.value?workState = state :workState = '上班'
 
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
 
       timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
-      ref.set(timeData.value,{merge: true}).then(() => {
-        if(workState == '下班') {
-          store.dispatch('commitClockOut',{getTimeData,workState})
-        }
-      })
-    }
 
-    const fsSendData = ()=> {
-      fsSet()
+      ref.set(timeData.value,{merge: true}).then(() => {              //傳到firestore
+
+        if(workState == state) {
+          store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
+        } 
+      })
     }
 
     onMounted(()=> {
@@ -111,7 +114,7 @@ export default {
       getLocation,
       clockInState,
       workStateData,
-      fsSendData
+      fsSet
     }
   }
 
@@ -155,10 +158,10 @@ export default {
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 下班
       .out(class='h-1/3')
         label 
-          input(type='radio' name='workstate' value='公出')
+          input(type='radio' name='workstate' value='公出' @click='fsSet("公出")')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500.rounded-br-2xl(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='fsSendData(),getLocation()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='fsSet("下班"),getLocation()') 打卡
       button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-br-2xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
 
 
