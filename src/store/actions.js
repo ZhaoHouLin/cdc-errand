@@ -22,5 +22,8 @@ export default {
   },
   commitClockInState({commit},string) {           //是否打卡成功
     commit('stateClockInState',string)
+  },
+  commitDocExist({commit},boolean) {              //日期資料是否存在
+    commit('stateDocExist',boolean)
   }
 }

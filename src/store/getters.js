@@ -22,5 +22,8 @@ export default {
   },
   clockInStateData(state) {                   //是否打卡成功
     return state.clockInState
+  },
+  docExistData(state) {                       //日期資料是否存在
+    return state.docExist
   }
 }

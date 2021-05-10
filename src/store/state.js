@@ -12,5 +12,6 @@ export default {
     longitude: ''
   },
   companyDistance: 0,                         //與公司的距離
-  clockInState: ''                            //是否打卡成功
+  clockInState: '',                           //是否打卡成功
+  docExist: false                             //日期資料是否存在
 }

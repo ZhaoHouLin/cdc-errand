@@ -29,5 +29,8 @@ export default {
   },
   stateClockInState(state, string) {                 //是否打卡成功
     state.clockInState = string
+  },
+  stateDocExist(state, boolean) {
+    state.docExist = boolean
   }
 }

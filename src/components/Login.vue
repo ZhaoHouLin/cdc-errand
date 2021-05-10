@@ -15,7 +15,7 @@ export default {
     const userData = ref()
     const millisecondsData = ref([])
 
-    const loginUserInfoData = computed(()=> {             //使用者登入資料
+    const loginUserInfoData = computed(()=> {                         //使用者登入資料
       return store.getters.loginUserInfoData
     })
 
@@ -23,15 +23,15 @@ export default {
       return store.getters.authStateData
     })
     
-    const fsLoadData = ()=> {                       //從firestore讀取資料
+    const fsLoadData = ()=> {                                         //從firestore讀取資料
       let today = getTime().currentDate
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(today)    //定義讀取的資料欄位
       ref.onSnapshot(doc => {
         millisecondsData.value = []
         if(doc.exists) {
+          store.dispatch('commitDocExist',doc.exists)
           for(let item in doc.data()['上班']) {
             if(doc.data()['上班'][item] !== '防資料覆寫') {
-              // console.log(doc.data()['上班'][item]);
               millisecondsData.value.push(doc.data()['上班'][item])
             }
           }
@@ -42,12 +42,12 @@ export default {
           let onWorkTime = convertMilliseconds(ms)
           store.dispatch('commitClockIn', {onWorkTime,ms})
         } else {
-          console.log('no');
+          store.dispatch('commitDocExist',doc.exists)
         }
       })
     }
 
-    const handleAuthState = ()=> {                        //判斷登入狀態
+    const handleAuthState = ()=> {                                    //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
         if (userData.value) {
           store.dispatch('commitAuthState',true)
@@ -101,14 +101,12 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
-      // fsLoadData
     }
   }
 }
 </script>
 
 <template lang='pug'>
-//- button(@click='fsLoadData') test
 .min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div

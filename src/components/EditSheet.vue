@@ -32,6 +32,9 @@ export default {
     const workStateData = computed(()=> {                 //上班、下班、公出狀態
       return store.getters.workStateData
     })
+    const docExistData = computed(()=> {                  //日期資料是否存在
+      return store.getters.docExistData
+    })
 
     const timeData = ref({
       '上班': {
@@ -39,15 +42,10 @@ export default {
       },
       '下班': {
         time: '防資料覆寫'
-      },
-      '公出': {
-        time: '防資料覆寫'
-      },
+      }
     })
-
-            
+  
     const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
-
       store.dispatch('commitWorkState',e.target.value)
     }
 
@@ -80,29 +78,17 @@ export default {
 
     const fsSet = ()=> {
       let getTimeData = getTime()
-      // let workState 
-      // const workStateData = googleFireStore.collection(loginUserInfoData.value.name)
+      let workState
+  
+      docExistData.value?workState = '下班':workState = '上班'
 
-      // workStateData.get().then(querySnapshot => {
-      //   querySnapshot.forEach(doc => {
-      //     if(doc.data()['上班'].length > 0) {
-      //       workState = '下班'
-      //     }
-      //     // for(let item in doc.data()['上班']) {
-      //     //   if(doc.data()['上班'][item] !== '防資料覆寫') {
-      //     //     data.push(doc.data()['上班'][item])
-      //     //   }
-      //     // }
-      //   })
-      // })
-      console.log(workState);
-
-      let workState = workStateData.value
-      store.dispatch('commitClockOut', { getTimeData, workState })
       const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
+
       timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
       ref.set(timeData.value,{merge: true}).then(() => {
-        console.log('set data successful')
+        if(workState == '下班') {
+          store.dispatch('commitClockOut',{getTimeData,workState})
+        }
       })
     }
 
@@ -161,15 +147,15 @@ export default {
     .state(class='w-full h-2/3')
       .on(class='h-1/3')
         label
-          input(type='radio' name='workstate' checked @click='handleWorkstate($event)' value='上班')
+          input(type='radio' name='workstate' checked value='上班')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 上班
       .off(class='h-1/3')
         label 
-          input(type='radio' name='workstate' @click='handleWorkstate($event)' value='下班')
+          input(type='radio' name='workstate' value='下班')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 下班
       .out(class='h-1/3')
         label 
-          input(type='radio' name='workstate' @click='handleWorkstate($event)' value='公出')
+          input(type='radio' name='workstate' value='公出')
           .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
     .control.bg-green-500.rounded-br-2xl(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
       button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='fsSendData(),getLocation()') 打卡
