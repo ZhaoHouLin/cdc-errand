@@ -129,7 +129,7 @@ export default {
 </script>
 
 <template lang='pug'>
-.content.bg-green-700.shadow-md(v-if='authStateData')
+.content.bg-green-800.shadow-md(v-if='authStateData')
   .avatar
     img.rounded-br-2xl(:src="loginUserInfoData.picture", alt="是你啦")
     .user-name.font-semibold.text-xl.text-white.ml-4.mt-2 {{loginUserInfoData.name}}
@@ -154,22 +154,23 @@ export default {
         .text-xl.text-green-300.ml-4 {{userCoordinatesData.latitude.toFixed(3)}} , {{userCoordinatesData.longitude.toFixed(3)}}
       .text-xl.font-semibold.ml-6 {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
-    .state(class='w-full h-2/3')
-      .on(class='h-1/3')
-        label
-          input(type='radio' name='workstate' checked value='上班')
-          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 上班
-      .off(class='h-1/3')
-        label 
-          input(type='radio' name='workstate' value='下班')
-          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 下班
-      .out(class='h-1/3')
-        label 
-          input(type='radio' name='workstate' value='公出' @click='fsSet("公出")')
-          .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
-    .control.bg-green-500.rounded-br-2xl(:class="['w-full','h-1/3',{'bg-darkgreen': workStateData=='公出'}]")
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-tl-3xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='fsSet("下班"),getLocation()') 打卡
-      button.font-semibold.shadow-md.text-white.bg-indigo-500.rounded-br-2xl(class='w-full h-1/2 hover:bg-indigo-800 hover:text-white' @click='handleSignOut') 登出
+    //- .state(class='w-full h-2/3')
+      //- .on(class='h-1/3')
+      //-   label
+      //-     input(type='radio' name='workstate' checked value='上班')
+      //-     .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 上班
+      //- .off(class='h-1/3')
+      //-   label 
+      //-     input(type='radio' name='workstate' value='下班')
+      //-     .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.border-b.border-green-700.cursor-pointer 下班
+      //- .out(class='h-full')
+      //-   label 
+      //-     input(type='radio' name='workstate' value='公出' @click='fsSet("公出")')
+      //-     .text.h-full.text-white.font-semibold.shadow-md.bg-green-500.cursor-pointer 公出
+    .control.bg-transparent.rounded-br-2xl(:class="['w-full','h-full']")
+      button.font-semibold.shadow-md.text-white.bg-green-700.rounded-tl-3xl.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-white' @click='fsSet("下班"),getLocation()') 打卡
+      button.font-semibold.shadow-md.text-white.bg-green-600.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-white' @click='fsSet("公出"),getLocation()') 公出
+      button.font-semibold.shadow-md.text-white.bg-green-500.rounded-br-2xl(class='w-full h-1/3 hover:bg-green-800 hover:text-white' @click='handleSignOut') 登出
 
 
 </template>
