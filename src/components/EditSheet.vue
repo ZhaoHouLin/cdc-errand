@@ -39,6 +39,10 @@ export default {
       return store.getters.userCompanyDistanceData
     })
 
+    const userDate = ref({
+
+    })
+
     const timeData = ref({
       '上班': {
         time: '防資料覆寫'
@@ -86,16 +90,18 @@ export default {
 
     const fsSet = (state)=> {
       let getTimeData = getTime()
-      let workState
+      let workState = '上班'
       console.log(userCompanyDistanceData.value);
       docExistData.value?workState = state :workState = '上班'
 
       if(userCompanyDistanceData.value <= 800 ) {        //判斷距離公司X00公尺內才能打卡
-        const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
-  
+        // const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
+
+        const ref = googleFireStore.collection('CDC').doc(loginUserInfoData.value.name)
+        userDate.value[getTimeData.currentDate] = timeData.value
+        
         timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
-  
-        ref.set(timeData.value,{merge: true}).then(() => {              //傳到firestore
+        ref.set(userDate.value,{merge: true}).then(() => {              //傳到firestore
           if(workState == state) {
             store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
           } 

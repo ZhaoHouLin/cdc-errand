@@ -24,14 +24,15 @@ export default {
     
     const fsLoadData = ()=> {                                         //從firestore讀取資料
       let today = getTime().currentDate
-      const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(today)    //定義讀取的資料欄位
+      // const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(today)    //定義讀取的資料欄位
+      const ref = googleFireStore.collection('CDC').doc(loginUserInfoData.value.name)    //定義讀取的資料欄位
       ref.onSnapshot(doc => {
         millisecondsData.value = []
         if(doc.exists) {
           store.dispatch('commitDocExist',doc.exists)
-          for(let item in doc.data()['上班']) {
-            if(doc.data()['上班'][item] !== '防資料覆寫') {
-              millisecondsData.value.push(doc.data()['上班'][item])
+          for(let item in doc.data()[today]['上班']) {
+            if(doc.data()[today]['上班'][item] !== '防資料覆寫') {
+              millisecondsData.value.push(doc.data()[today]['上班'][item])
             }
           }
           const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
