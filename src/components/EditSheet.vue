@@ -90,7 +90,7 @@ export default {
       console.log(userCompanyDistanceData.value);
       docExistData.value?workState = state :workState = '上班'
 
-      if(userCompanyDistanceData.value < 300 ) {        //判斷距離公司300公尺內才能打卡
+      if(userCompanyDistanceData.value <= 800 ) {        //判斷距離公司X00公尺內才能打卡
         const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
   
         timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
@@ -102,7 +102,7 @@ export default {
           store.dispatch('commitClockInState', '打卡成功')
         })
       } else {
-        store.dispatch('commitClockInState', '失敗')
+        store.dispatch('commitClockInState', '打卡失敗，位置不正確')
       }
     }
 
