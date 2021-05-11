@@ -7,6 +7,9 @@ import 'firebase/firestore';   // for cloud firestore
 import 'firebase/messaging';   // for cloud messaging
 import 'firebase/functions';   // for cloud functions
 
+// import credentialsPath from '../credentials.json'     //兩種皆可引入json
+// const creds = require('../credentials.json')           //兩種皆可引入json
+
 const firebaseConfig = {
   apiKey: "AIzaSyBRZn3H47fPHowp0Wx9naqJSFKcw84eKlw",
   authDomain: "fifth-legacy-271306.firebaseapp.com",

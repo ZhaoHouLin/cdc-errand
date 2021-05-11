@@ -2,7 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFireStore , googleFirebase } from '../db'
 import { useStore } from 'vuex'
-import { apiGoogleSpreadSheet, apiCommonFn } from '../api'
+import { apiCommonFn } from '../api'
 
 export default {
   setup() {

@@ -2,12 +2,11 @@
 import { googleFireStore , googleFirebase } from '../db'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import { apiGoogleSpreadSheet,apiCommonFn } from '../api'
+import { apiCommonFn } from '../api'
 export default {
   setup() {
 
     const store = useStore()
-    const { loadSheetData } = apiGoogleSpreadSheet()
     const { getLocation, convertMilliseconds, getTime } = apiCommonFn()
     let userEmail = ref('')
     let userPassword = ref('')
