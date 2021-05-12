@@ -28,8 +28,8 @@ export default {
       const ref = googleFireStore.collection('CDC').doc(loginUserInfoData.value.name)    //定義讀取的資料欄位
       ref.onSnapshot(doc => {
         millisecondsData.value = []
-        if(doc.exists) {
-          store.dispatch('commitDocExist',doc.exists)
+        if(doc.data()[today] !== undefined) {
+          store.dispatch('commitDocExist',true)
           for(let item in doc.data()[today]['上班']) {
             if(doc.data()[today]['上班'][item] !== '防資料覆寫') {
               millisecondsData.value.push(doc.data()[today]['上班'][item])
@@ -42,7 +42,7 @@ export default {
           let onWorkTime = convertMilliseconds(ms)
           store.dispatch('commitClockIn', {onWorkTime,ms})
         } else {
-          store.dispatch('commitDocExist',doc.exists)
+          store.dispatch('commitDocExist',false)
         }
       })
     }
