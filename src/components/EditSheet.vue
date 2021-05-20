@@ -74,32 +74,6 @@ export default {
       });
     }
 
-    
-    // const loadRealtimeDB = ()=> {                               //從RealtimeDatabase讀取資料
-    //   let today = getTime().currentDate
-    //   const millisecondsData = ref([])
-    //   // millisecondsData.value = []
-    //   googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
-    //     .once('value')
-    //     .then(result => {
-    //       console.log(result.val()[today]);
-    //       if (result.val()[today]!==null) {
-    //         store.dispatch('commitDocExist',true)
-    //         for(let item in result.val()[today] ) {
-    //           millisecondsData.value.push(result.val()[today][item])
-    //         }
-    //         const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
-    //           return a - b
-    //         })
-    //         let ms = sortArr[0]
-    //         let onWorkTime = convertMilliseconds(ms)
-    //         store.dispatch('commitClockIn', {onWorkTime,ms})
-    //       } else {
-    //         store.dispatch('commitDocExist',false)
-    //       }
-    //     })
-    // }
-
     const fsSet = (state)=> {
       let getTimeData = getTime()
       let workState = '上班'
