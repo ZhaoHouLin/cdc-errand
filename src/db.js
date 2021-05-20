@@ -27,3 +27,4 @@ firebase
 
 export const googleFireStore = firebase.firestore()
 export const googleFirebase = firebase
+export const googleRealtimeDB = firebase.database()

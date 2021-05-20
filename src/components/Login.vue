@@ -1,5 +1,5 @@
 <script>
-import { googleFireStore , googleFirebase } from '../db'
+import { googleFirebase, googleRealtimeDB } from '../db'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { apiCommonFn } from '../api'
@@ -12,7 +12,6 @@ export default {
     let userPassword = ref('')
     let errorMsg = ref('')
     const userData = ref()
-    const millisecondsData = ref([])
 
     const loginUserInfoData = computed(()=> {                         //使用者登入資料
       return store.getters.loginUserInfoData
@@ -22,29 +21,30 @@ export default {
       return store.getters.authStateData
     })
     
-    const fsLoadData = ()=> {                                         //從firestore讀取資料
+    const loadRealtimeDB = ()=> {                                //從RealtimeDatabase讀取資料
       let today = getTime().currentDate
-      // const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(today)    //定義讀取的資料欄位
-      const ref = googleFireStore.collection('CDC').doc(loginUserInfoData.value.name)    //定義讀取的資料欄位
-      ref.onSnapshot(doc => {
-        millisecondsData.value = []
-        if(doc.data()[today] !== undefined) {
-          store.dispatch('commitDocExist',true)
-          for(let item in doc.data()[today]['上班']) {
-            if(doc.data()[today]['上班'][item] !== '防資料覆寫') {
-              millisecondsData.value.push(doc.data()[today]['上班'][item])
+      const millisecondsData = ref([])
+      millisecondsData.value = []
+      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
+        .once('value')
+        .then(result => {
+          console.log(result.val()[today]);
+          if (result.val()[today]!==null && result.val()[today] !== undefined) {
+            store.dispatch('commitDocExist',true)
+            for(let item in result.val()[today] ) {
+              // console.log(item,result.val()[today][item] );
+              millisecondsData.value.push(result.val()[today][item])
             }
+            const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
+              return a - b
+            })
+            let ms = sortArr[0]
+            let onWorkTime = convertMilliseconds(ms)
+            store.dispatch('commitClockIn', {onWorkTime,ms})
+          } else {
+            store.dispatch('commitDocExist',false)
           }
-          const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
-            return a - b
-          })
-          let ms = sortArr[0]
-          let onWorkTime = convertMilliseconds(ms)
-          store.dispatch('commitClockIn', {onWorkTime,ms})
-        } else {
-          store.dispatch('commitDocExist',false)
-        }
-      })
+        })
     }
 
     const handleAuthState = ()=> {                                    //判斷登入狀態
@@ -71,7 +71,7 @@ export default {
           userData.value = googleFirebase.auth().currentUser          //存放登入資料
           store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile) //存放vuex
           handleAuthState()                                           //處理登入狀態
-          fsLoadData()
+          loadRealtimeDB()
         })
         .catch((error) => {
           // Handle Errors here.
@@ -101,12 +101,14 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
+      // loadRealtimeDB
     }
   }
 }
 </script>
 
 <template lang='pug'>
+//- button(@click='loadRealtimeDB') load
 .min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div
