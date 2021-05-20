@@ -28,17 +28,20 @@ export default {
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
         .once('value')
         .then(result => {
-          console.log(result.val()[today]);
+          // console.log(result.val()[today]);
           if (result.val()[today]!==null && result.val()[today] !== undefined) {
             store.dispatch('commitDocExist',true)
-            for(let item in result.val()[today] ) {
-              // console.log(item,result.val()[today][item] );
-              millisecondsData.value.push(result.val()[today][item])
-            }
+            // console.log(Object.values(result.val()[today])[0]);
+            
+            // for(let item in result.val()[today] ) {
+            //   millisecondsData.value.push(result.val()[today][item])
+            // }
             const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
               return a - b
             })
-            let ms = sortArr[0]
+            // let ms = sortArr[0]
+            // let onWorkTime = convertMilliseconds(ms)
+            let ms = Object.values(result.val()[today])[0]
             let onWorkTime = convertMilliseconds(ms)
             store.dispatch('commitClockIn', {onWorkTime,ms})
           } else {
@@ -101,14 +104,14 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
-      // loadRealtimeDB
+      loadRealtimeDB
     }
   }
 }
 </script>
 
 <template lang='pug'>
-//- button(@click='loadRealtimeDB') load
+button(@click='loadRealtimeDB') load
 .min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div

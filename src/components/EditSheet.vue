@@ -39,10 +39,6 @@ export default {
       return store.getters.userCompanyDistanceData
     })
 
-    const userDate = ref({
-
-    })
-
     const timeData = reactive({})
   
     const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
@@ -82,7 +78,7 @@ export default {
     const loadRealtimeDB = ()=> {                               //從RealtimeDatabase讀取資料
       let today = getTime().currentDate
       const millisecondsData = ref([])
-      millisecondsData.value = []
+      // millisecondsData.value = []
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
         .once('value')
         .then(result => {
@@ -107,15 +103,14 @@ export default {
     const fsSet = (state)=> {
       let getTimeData = getTime()
       let workState = '上班'
-      for(let key in timeData){
+      for(let key in timeData){                          //清除timeData的資料
         delete timeData[key]
       }
-      console.log(timeData);
-      // console.log(userCompanyDistanceData.value);
+
       docExistData.value?workState = state :workState = '上班'
 
-      // userDate.value[getTimeData.currentDate] = timeData.value
       timeData[getTimeData.currentTime] = getTimeData.dayMilliseconds
+
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/${workState}/${getTimeData.currentDate}`).update(timeData)
         .then(()=> {
           if(workState == state) {
