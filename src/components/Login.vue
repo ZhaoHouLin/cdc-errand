@@ -7,7 +7,7 @@ export default {
   setup() {
 
     const store = useStore()
-    const { getLocation, convertMilliseconds, getTime } = apiCommonFn()
+    const { getLocation, loadRealtimeDB } = apiCommonFn()
     let userEmail = ref('')
     let userPassword = ref('')
     let errorMsg = ref('')
@@ -20,36 +20,7 @@ export default {
     const authStateData = computed(()=> {
       return store.getters.authStateData
     })
-    
-    const loadRealtimeDB = ()=> {                                //從RealtimeDatabase讀取資料
-      let today = getTime().currentDate
-      const millisecondsData = ref([])
-      millisecondsData.value = []
-      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
-        .once('value')
-        .then(result => {
-          // console.log(result.val()[today]);
-          if (result.val()[today]!==null && result.val()[today] !== undefined) {
-            store.dispatch('commitDocExist',true)
-            // console.log(Object.values(result.val()[today])[0]);
-            
-            // for(let item in result.val()[today] ) {
-            //   millisecondsData.value.push(result.val()[today][item])
-            // }
-            const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
-              return a - b
-            })
-            // let ms = sortArr[0]
-            // let onWorkTime = convertMilliseconds(ms)
-            let ms = Object.values(result.val()[today])[0]
-            let onWorkTime = convertMilliseconds(ms)
-            store.dispatch('commitClockIn', {onWorkTime,ms})
-          } else {
-            store.dispatch('commitDocExist',false)
-          }
-        })
-    }
-
+  
     const handleAuthState = ()=> {                                    //判斷登入狀態
       googleFirebase.auth().onAuthStateChanged(()=> {
         if (userData.value) {
@@ -104,14 +75,14 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
-      loadRealtimeDB
+      // loadRealtimeDB
     }
   }
 }
 </script>
 
 <template lang='pug'>
-button(@click='loadRealtimeDB') load
+//- button(@click='loadRealtimeDB') load
 .min-h-screen.flex.items-center.justify-center.py-12.px-4(class='sm:px-6 lg:px-8 w-8/12' v-if='!authStateData')
   .max-w-xl.w-full.space-y-8
     div

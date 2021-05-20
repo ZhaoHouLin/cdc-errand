@@ -1,11 +1,16 @@
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed,ref } from 'vue'
+import { googleRealtimeDB } from '../db'
 const fn = ()=> {
 
   const store = useStore()
 
   const workStateData = computed(() => {
     return store.getters.workStateData
+  })
+
+  const loginUserInfoData = computed(() => {             //使用者登入資料
+    return store.getters.loginUserInfoData
   })
 
   const getLocation = () => {
@@ -95,11 +100,36 @@ const fn = ()=> {
     return {resultDate,resultTime}
   }
 
+  const sort = (array)=> {                                      //排序用
+    const sortArr =  array.sort((a, b) => {
+      return a - b
+    })
+    return sortArr
+  }
+
+  const loadRealtimeDB = () => {                                //從RealtimeDatabase讀取資料
+    let today = getTime().currentDate
+    googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
+      .once('value')
+      .then(result => {
+        if (result.val()[today] !== null && result.val()[today] !== undefined) {
+          let ms = Object.values(result.val()[today])[0]
+          let onWorkTime = convertMilliseconds(ms)
+          store.dispatch('commitDocExist', true)
+          store.dispatch('commitClockIn', { onWorkTime, ms })
+        } else {
+          store.dispatch('commitDocExist', false)
+        }
+      })
+  }
+
   return {
     getLocation,
     formatTime,
     getTime,
-    convertMilliseconds
+    convertMilliseconds,
+    loadRealtimeDB,
+    sort
   }
 
 }

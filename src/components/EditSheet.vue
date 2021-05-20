@@ -8,7 +8,7 @@ export default {
   setup() {
 
     const store = useStore()
-    const { getLocation, getTime,convertMilliseconds } = apiCommonFn()
+    const { getLocation, getTime,loadRealtimeDB } = apiCommonFn()
     const userData = ref()  
 
     const loginUserInfoData = computed(()=> {             //使用者登入資料
@@ -75,30 +75,30 @@ export default {
     }
 
     
-    const loadRealtimeDB = ()=> {                               //從RealtimeDatabase讀取資料
-      let today = getTime().currentDate
-      const millisecondsData = ref([])
-      // millisecondsData.value = []
-      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
-        .once('value')
-        .then(result => {
-          console.log(result.val()[today]);
-          if (result.val()[today]!==null) {
-            store.dispatch('commitDocExist',true)
-            for(let item in result.val()[today] ) {
-              millisecondsData.value.push(result.val()[today][item])
-            }
-            const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
-              return a - b
-            })
-            let ms = sortArr[0]
-            let onWorkTime = convertMilliseconds(ms)
-            store.dispatch('commitClockIn', {onWorkTime,ms})
-          } else {
-            store.dispatch('commitDocExist',false)
-          }
-        })
-    }
+    // const loadRealtimeDB = ()=> {                               //從RealtimeDatabase讀取資料
+    //   let today = getTime().currentDate
+    //   const millisecondsData = ref([])
+    //   // millisecondsData.value = []
+    //   googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
+    //     .once('value')
+    //     .then(result => {
+    //       console.log(result.val()[today]);
+    //       if (result.val()[today]!==null) {
+    //         store.dispatch('commitDocExist',true)
+    //         for(let item in result.val()[today] ) {
+    //           millisecondsData.value.push(result.val()[today][item])
+    //         }
+    //         const sortArr = millisecondsData.value.sort((a,b)=> {     //排序上班時間(由最早到最晚)
+    //           return a - b
+    //         })
+    //         let ms = sortArr[0]
+    //         let onWorkTime = convertMilliseconds(ms)
+    //         store.dispatch('commitClockIn', {onWorkTime,ms})
+    //       } else {
+    //         store.dispatch('commitDocExist',false)
+    //       }
+    //     })
+    // }
 
     const fsSet = (state)=> {
       let getTimeData = getTime()
@@ -113,7 +113,7 @@ export default {
 
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/${workState}/${getTimeData.currentDate}`).update(timeData)
         .then(()=> {
-          if(workState == state) {
+          if(workState === state) {
             store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
           } 
           store.dispatch('commitClockInState', '打卡成功')
@@ -121,27 +121,13 @@ export default {
           alert("伺服器發生錯誤，請稍後再試");
         });
 
+      
       if(userCompanyDistanceData.value <= 800 ) {        //判斷距離公司X00公尺內才能打卡
-        // const ref = googleFireStore.collection(loginUserInfoData.value.name).doc(getTimeData.currentDate)
 
-        // const ref = googleFireStore.collection('CDC').doc(loginUserInfoData.value.name)
-        // userDate.value[getTimeData.currentDate] = timeData.value
-        
-        // timeData.value[workState][getTimeData.currentTime] = getTimeData.dayMilliseconds
-        // ref.set(userDate.value,{merge: true}).then(() => {              //傳到firestore
-        //   if(workState == state) {
-        //     store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
-        //   } 
-        //   store.dispatch('commitClockInState', '打卡成功')
-
-
-
-        // })
       } else {
         // store.dispatch('commitClockInState', '打卡失敗，位置不正確')
-
-
       }
+
       loadRealtimeDB()
     }
 
