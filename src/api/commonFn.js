@@ -109,7 +109,7 @@ const fn = ()=> {
 
   const loadRealtimeDB = () => {                                //從RealtimeDatabase讀取資料
     let today = getTime().currentDate
-    googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/上班`)
+    googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}-${loginUserInfoData.value.name}/上班`)
       .once('value')
       .then(result => {
         if (result.val()[today] !== null && result.val()[today] !== undefined) {

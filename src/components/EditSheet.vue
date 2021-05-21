@@ -85,7 +85,9 @@ export default {
 
       timeData[getTimeData.currentTime] = getTimeData.dayMilliseconds
 
-      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.name}/${workState}/${getTimeData.currentDate}`).update(timeData)
+      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}-${loginUserInfoData.value.name}`).update({email:loginUserInfoData.value.email})
+
+      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}-${loginUserInfoData.value.name}/${workState}/${getTimeData.currentDate}`).update(timeData)
         .then(()=> {
           if(workState === state) {
             store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
