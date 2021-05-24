@@ -109,11 +109,12 @@ const fn = ()=> {
 
   const loadRealtimeDB = () => {                                //從RealtimeDatabase讀取資料
     let today = getTime().currentDate
-    googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${today}/上班`)
+    googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${today}/0`)
       .once('value')
       .then(result => {
+        console.log(result.val());
         if (result.val() !== null && result.val() !== undefined) {
-          let ms = Object.values(result.val())[0]
+          let ms = result.val()[1]
           let onWorkTime = convertMilliseconds(ms)
           store.dispatch('commitDocExist', true)
           store.dispatch('commitClockIn', { onWorkTime, ms })

@@ -39,7 +39,7 @@ export default {
       return store.getters.userCompanyDistanceData
     })
 
-    const timeData = reactive({})
+    const timeData = reactive([[],[],[]])
   
     const handleWorkstate = (e)=> {                       //上班、下班、公出狀態
       console.log(e.target.value);
@@ -77,22 +77,24 @@ export default {
     const fsSet = (state)=> {
       let getTimeData = getTime()
       let workState = '上班'
-      for(let key in timeData){                          //清除timeData的資料
-        delete timeData[key]
-      }
-
+      // for(let key in timeData){                          //清除timeData的資料
+      //   delete timeData[key]
+      // }
+      
       docExistData.value?workState = state :workState = '上班'
 
-      timeData[getTimeData.currentTime] = getTimeData.dayMilliseconds
+      // timeData[getTimeData.currentTime] = getTimeData.dayMilliseconds
+      
 
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}`).update({email:loginUserInfoData.value.email})
 
       googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}`).update({name:loginUserInfoData.value.name})
 
+      // timeData[0] = [getTimeData.currentTime,getTimeData.dayMilliseconds]
       // googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/${workState}}`).update(timeData)
-
-      if(workState==='下班') {
-        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/下班`).set(timeData)
+      if(workState==='上班') {
+        timeData[0] = [getTimeData.currentTime,getTimeData.dayMilliseconds]
+        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}`).update(timeData)
         .then(()=> {
           if(workState === state) {
             store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
@@ -101,16 +103,30 @@ export default {
         }).catch(()=> {
           alert("伺服器發生錯誤，請稍後再試");
         });
-      } else {
-        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/${workState}`).update(timeData)
-          .then(()=> {
-            if(workState === state) {
-              store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
-            } 
-            store.dispatch('commitClockInState', '打卡成功')
-          }).catch(()=> {
-            alert("伺服器發生錯誤，請稍後再試");
-          });
+      }
+      if(workState==='下班') {
+        timeData[1] = [getTimeData.currentTime,getTimeData.dayMilliseconds]
+        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}`).set(timeData)
+        .then(()=> {
+          if(workState === state) {
+            store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
+          } 
+          store.dispatch('commitClockInState', '打卡成功')
+        }).catch(()=> {
+          alert("伺服器發生錯誤，請稍後再試");
+        });
+      } 
+      if(workState==='公出') {
+        timeData[2].push([getTimeData.currentTime,getTimeData.dayMilliseconds])
+        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}`).update(timeData)
+        .then(()=> {
+          if(workState === state) {
+            store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
+          } 
+          store.dispatch('commitClockInState', '打卡成功')
+        }).catch(()=> {
+          alert("伺服器發生錯誤，請稍後再試");
+        });
       }
 
       
