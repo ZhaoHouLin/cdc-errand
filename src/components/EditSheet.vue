@@ -91,7 +91,8 @@ export default {
 
       // googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/${workState}}`).update(timeData)
 
-      googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/${workState}`).update(timeData)
+      if(workState==='下班') {
+        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/下班`).set(timeData)
         .then(()=> {
           if(workState === state) {
             store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
@@ -100,6 +101,17 @@ export default {
         }).catch(()=> {
           alert("伺服器發生錯誤，請稍後再試");
         });
+      } else {
+        googleRealtimeDB.ref(`/CDC/${loginUserInfoData.value.id}/date/${getTimeData.currentDate}/${workState}`).update(timeData)
+          .then(()=> {
+            if(workState === state) {
+              store.dispatch('commitClockOut',{getTimeData,workState})    //介面顯示時間
+            } 
+            store.dispatch('commitClockInState', '打卡成功')
+          }).catch(()=> {
+            alert("伺服器發生錯誤，請稍後再試");
+          });
+      }
 
       
       if(userCompanyDistanceData.value <= 800 ) {        //判斷距離公司X00公尺內才能打卡
