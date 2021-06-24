@@ -5,7 +5,7 @@ import { apiCommonFn } from './index'
 import creds from '../../credentials.json'
 const handleSheet = ()=> {
 
-  const { getTime } = apiCommonFn()
+  const { getTime, convertMilliseconds } = apiCommonFn()
 
   const store = useStore()
 
@@ -13,47 +13,61 @@ const handleSheet = ()=> {
     return store.getters.loginUserInfoData
   })
 
-  const currentTimeData = computed(() => {
-    return store.getters.currentTimeData
-  })
-
-  const lastTimeData = computed(() => {
-    return store.getters.lastTimeData
-  })
 
   const workStateData = computed(() => {
     return store.getters.workStateData
   })
 
-  const userCompanyDistanceData = computed(()=> {
-    return store.getters.userCompanyDistanceData
+  const userCoordinatesData = computed(() => {           //使用者所在座標
+    return store.getters.userCoordinatesData
+  })
+
+  const docExistData = computed(() => {                  //日期資料是否存在
+    return store.getters.docExistData
   })
 
   const timeResult = reactive([])
 
   const sheet = ref()
 
+
+
   const sendData = async ()=> {
     await loadSheetData()
-    if (userCompanyDistanceData.value <= 300) {
+    let getTimeData = getTime()
+    if (!docExistData.value) {
+      let getTimeData = getTime()
+      let resultDate = getTimeData.currentDate
+      let resultTime = getTimeData.currentTime
+      let ms = getTimeData.dayMilliseconds
+      let lastWorkState = '上班'
+      let onWorkTime = {
+        resultDate,
+        resultTime,
+      }
+      store.dispatch('commitClockIn', { onWorkTime, ms, lastWorkState })
       store.dispatch('commitClockInState', '打卡成功')
-      await getTime()
-      const data = await sheet.value.addRow({               //將資料寫入sheet
-        name: loginUserInfoData.value.name,                 //會根據key(第一列title)值寫入value
-        email: loginUserInfoData.value.email,
-        currentdate: currentTimeData.value.currentDate,
-        currenttime: currentTimeData.value.currentTime,
-        lastdate: lastTimeData.value.lastDate,
-        lasttime: lastTimeData.value.lastTime,
-        daymilliseconds: currentTimeData.value.dayMilliseconds,
-        lastdaymilliseconds: lastTimeData.value.lastDayMilliseconds,
-        state: workStateData.value
-      })
-      
+      store.dispatch('commitDocExist', true)
     } else {
-      store.dispatch('commitClockInState','偵測位置不正確，請重新定位')
+      store.dispatch('commitClockOut', { getTimeData })
+      store.dispatch('commitClockInState', '打卡成功')
     }
+
+    await sheet.value.addRow({                            //將資料寫入sheet
+      id: loginUserInfoData.value.id,                     //將資料寫入sheet
+      email: loginUserInfoData.value.email,
+      name: loginUserInfoData.value.name,                 //會根據key(第一列title)值寫入value
+      date: getTimeData.currentDate,
+      currenttime: getTimeData.currentTime,
+      state: workStateData.value,
+      latitude: userCoordinatesData.latitude,
+      longitude: userCoordinatesData.longitude,
+      daymilliseconds: getTimeData.dayMilliseconds,
+    })
+
   }
+
+
 
   //將金鑰獨立出json檔
   // const loadSheetData = async (docID = '1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY', sheetID = '0')=> {
@@ -86,6 +100,35 @@ const handleSheet = ()=> {
   //   })
   // }
 
+  const lastTimeData = async () => {
+    await loadSheetData()
+    const rows = await sheet.value.getRows()
+    
+    if (rows.length === 0) {                                //檢查資料有無存在
+      store.dispatch('commitDocExist', false)
+    } else {
+      store.dispatch('commitDocExist', true)
+    }
+
+    await rows.forEach(row => {
+      if (row.state === '上班' && row.date === getTime().currentDate) {
+        timeResult.push(row.daymilliseconds)                //將登入的使用者時間存起來
+        
+        //讀第一筆資料來呈現上班的打卡紀錄
+        let resultDate = convertMilliseconds(+timeResult[0]).resultDate
+        let resultTime = convertMilliseconds(+timeResult[0]).resultTime
+        let ms = +timeResult[0]
+        let lastWorkState = '上班'
+        let onWorkTime = {
+          resultDate,
+          resultTime,
+        }
+        store.dispatch('commitClockIn', { onWorkTime, ms, lastWorkState })
+      }
+    })
+
+  }
+
   const loadSheetData = async () => {                          //Google spread sheet
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
     //google-spreadsheet-API函式
@@ -98,39 +141,23 @@ const handleSheet = ()=> {
     });
   
     await doc.loadInfo() // loads document properties and worksheets
-    
-    // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-    sheet.value = doc.sheetsByIndex[0] 
+    sheet.value = doc.sheetsByTitle[loginUserInfoData.value.name]
 
-    
-    // await sheet.value.loadCells('A1:E10')
-    // const cellA1 = await sheet.value.getCell(0, 0)            //定義sheet A1位置
-    // const cellC3 = sheet.value.getCellByA1('C3')             //取得c3的值的方式
-  
-    const rows = await sheet.value.getRows()                  //取得欄
-  
-    await rows.forEach(row => {                               //處理使用者時間資料
-      if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
-        timeResult.push({                                     //將登入的使用者時間存起來
-          currentDate: row.currentdate,
-          currentTime: row.currenttime,
-          workState: row.state,
-          dayMilliseconds: row.daymilliseconds
-        })
-        //存最後一筆資料來呈現上次的打卡紀錄
-        let lastDate = timeResult[timeResult.length - 1].currentDate    
-        let lastTime = timeResult[timeResult.length - 1].currentTime
-        let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
-        let lastWorkState = timeResult[timeResult.length - 1].workState
-        store.dispatch('commitClockIn', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
-      }
-    })
+    if (sheet.value === undefined) {          //使用者資料不存在就建立表格欄位標題
+      await doc.addSheet({
+        title: loginUserInfoData.value.name,
+        headerValues: ['id', 'email', 'name', 'date', 'currenttime', 'state', 'latitude', 'longitude', 'daymilliseconds']
+      });
+      sheet.value = doc.sheetsByTitle[loginUserInfoData.value.name]
+    }
+
 
   }
 
   return {
     loadSheetData,
     sendData,
+    lastTimeData
   }
 }
 

@@ -3,12 +3,13 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { googleFirebase, googleRealtimeDB } from '../db'
 import { useStore } from 'vuex'
 import { apiCommonFn } from '../api'
-
+import { spreadSheet } from '../api/googlespreadsheet'
 export default {
   setup() {
 
     const store = useStore()
-    const { getLocation, getTime,loadRealtimeDB } = apiCommonFn()
+    const { getLocation, getTime } = apiCommonFn()
+    const { sendData, lastTimeData} = spreadSheet()
     const userData = ref()  
 
     const loginUserInfoData = computed(()=> {             //使用者登入資料
@@ -154,7 +155,8 @@ export default {
       getLocation,
       clockInState,
       workStateData,
-      fsSet
+      sendData,
+      // lastTimeData
     }
   }
 
@@ -162,6 +164,7 @@ export default {
 </script>
 
 <template lang='pug'>
+//- button(@click='lastTimeData') test
 .content.bg-green-800.shadow-md(v-if='authStateData')
   .avatar
     img.rounded-br-2xl(:src="loginUserInfoData.picture", alt="是你啦")
@@ -188,7 +191,7 @@ export default {
       .text-xl.font-semibold.ml-6 {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
     .control.bg-transparent.rounded-br-2xl(:class="['w-full','h-full']")
-      button.font-semibold.shadow-md.text-white.bg-green-700.rounded-tl-3xl.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='fsSet("下班"),getLocation()') 
+      button.font-semibold.shadow-md.text-white.bg-green-700.rounded-tl-3xl.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='sendData(),getLocation()') 
         i.fas.fa-user-clock
         h3 打卡
       button.font-semibold.shadow-md.text-white.bg-green-600.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='fsSet("公出"),getLocation()')

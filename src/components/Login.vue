@@ -3,19 +3,18 @@ import { googleFirebase, googleRealtimeDB } from '../db'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { apiCommonFn } from '../api'
+import { spreadSheet } from '../api/googlespreadsheet'
 export default {
   setup() {
 
     const store = useStore()
-    const { getLocation, loadRealtimeDB } = apiCommonFn()
+    const { getLocation } = apiCommonFn()
+    const { lastTimeData } = spreadSheet()
+
     let userEmail = ref('')
     let userPassword = ref('')
     let errorMsg = ref('')
     const userData = ref()
-
-    const loginUserInfoData = computed(()=> {                         //使用者登入資料
-      return store.getters.loginUserInfoData
-    })
 
     const authStateData = computed(()=> {
       return store.getters.authStateData
@@ -45,7 +44,8 @@ export default {
           userData.value = googleFirebase.auth().currentUser          //存放登入資料
           store.dispatch('commitLoginUserInfo',result.additionalUserInfo.profile) //存放vuex
           handleAuthState()                                           //處理登入狀態
-          loadRealtimeDB()
+  
+          lastTimeData()
         })
         .catch((error) => {
           // Handle Errors here.
@@ -75,7 +75,6 @@ export default {
       handleSignOut,
       authStateData,
       errorMsg,
-      // loadRealtimeDB
     }
   }
 }
