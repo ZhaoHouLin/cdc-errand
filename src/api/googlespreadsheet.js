@@ -45,7 +45,7 @@ const handleSheet = ()=> {
     }
     if (!docExistData.value) {
 
-      !docExistData.value ? workState = state : workState = '上班'
+      !docExistData.value ? workState = '上班' : workState = state
 
       store.dispatch('commitClockIn', { onWorkTime, ms, workState })
       store.dispatch('commitWorkState', workState)
@@ -82,28 +82,6 @@ const handleSheet = ()=> {
   //   await doc.useServiceAccountAuth(creds);
   //   await doc.loadInfo();
 
-  //   // sheet.value = doc.sheetsByIndex[0]
-  //   sheet.value = doc.sheetsById[sheetID]     //ID = google excel網址的gid
-
-  //   const rows = await sheet.value.getRows()
-
-  //   await rows.forEach(row => {                               //處理使用者時間資料
-  //     if (row.name == loginUserInfoData.value.name) {         //只抓登入使用者的判斷
-  //       timeResult.push({                                     //將登入的使用者時間存起來
-  //         currentDate: row.currentdate,
-  //         currentTime: row.currenttime,
-  //         workState: row.state,
-  //         dayMilliseconds: row.daymilliseconds
-  //       })
-  //       //存最後一筆資料來呈現上次的打卡紀錄
-  //       let lastDate = timeResult[timeResult.length - 1].currentDate
-  //       let lastTime = timeResult[timeResult.length - 1].currentTime
-  //       let lastDayMilliseconds = timeResult[timeResult.length - 1].dayMilliseconds
-  //       let lastWorkState = timeResult[timeResult.length - 1].workState
-  //       store.dispatch('commitLastTime', { lastDate, lastTime, lastDayMilliseconds, lastWorkState })
-  //     }
-  //   })
-  // }
 
   const lastTimeData = async () => {
     await loadSheetData()
