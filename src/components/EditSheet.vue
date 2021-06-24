@@ -191,10 +191,10 @@ export default {
       .text-xl.font-semibold.ml-6 {{clockInState}}
   .punch-in-out.text-xl.font-extrabold
     .control.bg-transparent.rounded-br-2xl(:class="['w-full','h-full']")
-      button.font-semibold.shadow-md.text-white.bg-green-700.rounded-tl-3xl.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='sendData(),getLocation()') 
+      button.font-semibold.shadow-md.text-white.bg-green-700.rounded-tl-3xl.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='sendData("下班"),getLocation()') 
         i.fas.fa-user-clock
         h3 打卡
-      button.font-semibold.shadow-md.text-white.bg-green-600.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='fsSet("公出"),getLocation()')
+      button.font-semibold.shadow-md.text-white.bg-green-600.border-b(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='sendData("公出"),getLocation()')
         i.fas.fa-business-time
         h3 公出
       button.font-semibold.shadow-md.text-white.bg-green-500.rounded-br-2xl(class='w-full h-1/3 hover:bg-green-800 hover:text-green-300' @click='handleSignOut')

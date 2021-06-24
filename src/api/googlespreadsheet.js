@@ -32,24 +32,29 @@ const handleSheet = ()=> {
 
 
 
-  const sendData = async ()=> {
+  const sendData = async (state)=> {
     await loadSheetData()
     let getTimeData = getTime()
+    let resultDate = getTimeData.currentDate
+    let resultTime = getTimeData.currentTime
+    let ms = getTimeData.dayMilliseconds
+    let workState = state
+    let onWorkTime = {
+      resultDate,
+      resultTime,
+    }
     if (!docExistData.value) {
-      let getTimeData = getTime()
-      let resultDate = getTimeData.currentDate
-      let resultTime = getTimeData.currentTime
-      let ms = getTimeData.dayMilliseconds
-      let lastWorkState = '上班'
-      let onWorkTime = {
-        resultDate,
-        resultTime,
-      }
-      store.dispatch('commitClockIn', { onWorkTime, ms, lastWorkState })
+
+      !docExistData.value ? workState = state : workState = '上班'
+
+      store.dispatch('commitClockIn', { onWorkTime, ms, workState })
+      store.dispatch('commitWorkState', workState)
       store.dispatch('commitClockInState', '打卡成功')
       store.dispatch('commitDocExist', true)
     } else {
-      store.dispatch('commitClockOut', { getTimeData })
+      workState = state
+      store.dispatch('commitClockOut', { getTimeData, workState })
+      store.dispatch('commitWorkState', workState)
       store.dispatch('commitClockInState', '打卡成功')
     }
 
@@ -129,10 +134,8 @@ const handleSheet = ()=> {
 
   }
 
-  const loadSheetData = async () => {                          //Google spread sheet
+  const loadSheetData = async () => {                       //Google spread sheet
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
-    //google-spreadsheet-API函式
-    // await getTime()
 
     //google-spreadsheet-API 金鑰設定
     await doc.useServiceAccountAuth({                         
