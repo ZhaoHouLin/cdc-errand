@@ -1,5 +1,5 @@
-# cdc-errand ver. 0.1.2
-# 疾管點點名 ver. 0.1.2
+# cdc-errand ver. 0.1.3
+# 疾管點點名 ver. 0.1.3
 
 DEMO網頁: https://zhaohoulin.github.io/cdc-errand/?openExternalBrowser=1
 
@@ -14,5 +14,5 @@ DEMO網頁: https://zhaohoulin.github.io/cdc-errand/?openExternalBrowser=1
 
 
 ## 修改內容
-* 資料搬到 Realtime Database
-* 日期資料結構更改
+* 更改為以google spreadsheet存取打卡資料
+
