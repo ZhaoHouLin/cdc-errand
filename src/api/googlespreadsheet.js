@@ -59,15 +59,14 @@ const handleSheet = ()=> {
     }
 
     await sheet.value.addRow({                            //將資料寫入sheet
-      id: loginUserInfoData.value.id,                     //將資料寫入sheet
       email: loginUserInfoData.value.email,
       name: loginUserInfoData.value.name,                 //會根據key(第一列title)值寫入value
       date: getTimeData.currentDate,
       currenttime: getTimeData.currentTime,
       state: workStateData.value,
+      daymilliseconds: getTimeData.dayMilliseconds,
       latitude: userCoordinatesData.latitude,
       longitude: userCoordinatesData.longitude,
-      daymilliseconds: getTimeData.dayMilliseconds,
     })
 
   }
@@ -111,7 +110,6 @@ const handleSheet = ()=> {
 
   const loadSheetData = async () => {                       //Google spread sheet
     const doc = new GoogleSpreadsheet('1u068XIFnWLcWC2GH68W0bbF6gK3oJc6aRLro2khwVfY')
-
     //google-spreadsheet-API 金鑰設定
     await doc.useServiceAccountAuth({                         
       client_email: 'errand@fifth-legacy-271306.iam.gserviceaccount.com',
@@ -119,14 +117,14 @@ const handleSheet = ()=> {
     });
   
     await doc.loadInfo() // loads document properties and worksheets
-    sheet.value = doc.sheetsByTitle[loginUserInfoData.value.name]
+    sheet.value = doc.sheetsByTitle[loginUserInfoData.value.email]
 
     if (sheet.value === undefined) {          //使用者資料不存在就建立表格欄位標題
       await doc.addSheet({
-        title: loginUserInfoData.value.name,
-        headerValues: ['id', 'email', 'name', 'date', 'currenttime', 'state', 'latitude', 'longitude', 'daymilliseconds']
+        title: loginUserInfoData.value.email,
+        headerValues: ['email', 'name', 'date', 'currenttime', 'state', 'daymilliseconds', 'latitude', 'longitude']
       });
-      sheet.value = doc.sheetsByTitle[loginUserInfoData.value.name]
+      sheet.value = doc.sheetsByTitle[loginUserInfoData.value.email]
     }
 
 
