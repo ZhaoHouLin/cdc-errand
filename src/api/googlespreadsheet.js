@@ -86,15 +86,10 @@ const handleSheet = ()=> {
   const lastTimeData = async () => {
     await loadSheetData()
     const rows = await sheet.value.getRows()
-    
-    if (rows.length === 0) {                                //檢查資料有無存在
-      store.dispatch('commitDocExist', false)
-    } else {
-      store.dispatch('commitDocExist', true)
-    }
 
     await rows.forEach(row => {
       if (row.state === '上班' && row.date === getTime().currentDate) {
+        store.dispatch('commitDocExist', true)
         timeResult.push(row.daymilliseconds)                //將登入的使用者時間存起來
         
         //讀第一筆資料來呈現上班的打卡紀錄
@@ -107,6 +102,8 @@ const handleSheet = ()=> {
           resultTime,
         }
         store.dispatch('commitClockIn', { onWorkTime, ms, lastWorkState })
+      } else {
+        store.dispatch('commitDocExist', false)  //無今日上班紀錄
       }
     })
 
